@@ -41,11 +41,11 @@ class ManifestSerializer < ActiveModel::Serializer
   end
 
   def theme_color
-    '#191b22'
+    Themes::THEME_COLORS[:dark]
   end
 
   def background_color
-    '#191b22'
+    Themes::THEME_COLORS[:dark]
   end
 
   def display
@@ -92,26 +92,10 @@ class ManifestSerializer < ActiveModel::Serializer
   end
 
   def prefer_related_applications
-    true
+    false
   end
 
   def related_applications
-    [
-      {
-        platform: 'play',
-        url: 'https://play.google.com/store/apps/details?id=org.joinmastodon.android',
-        id: 'org.joinmastodon.android',
-      },
-      {
-        platform: 'itunes',
-        url: 'https://apps.apple.com/us/app/mastodon-for-iphone/id1571998974',
-        id: 'id1571998974',
-      },
-      {
-        platform: 'f-droid',
-        url: 'https://f-droid.org/en/packages/org.joinmastodon.android/',
-        id: 'org.joinmastodon.android',
-      },
-    ]
+    []
   end
 end

@@ -1,0 +1,92 @@
+// Tasamur palette. Keep brand accents separate from neutral application surfaces.
+@mixin palette {
+  --tasamur-primary: #0a7780;
+  --tasamur-deep-teal: #075e66;
+  --tasamur-soft-teal: #d9eff0;
+  --tasamur-dark-background: #101517;
+  --tasamur-light-background: #f7f9f9;
+  --tasamur-dark-text: #152022;
+  --tasamur-light-text: #eff7f6;
+
+  // Neutral scale shared by the existing light and dark themes.
+  --color-grey-50: var(--tasamur-light-background);
+  --color-grey-100: var(--tasamur-light-text);
+  --color-grey-200: color-mix(
+    in srgb,
+    #fff 80%,
+    var(--tasamur-dark-background)
+  );
+  --color-grey-300: color-mix(
+    in srgb,
+    #fff 65%,
+    var(--tasamur-dark-background)
+  );
+  --color-grey-400: color-mix(
+    in srgb,
+    #fff 55%,
+    var(--tasamur-dark-background)
+  );
+  --color-grey-500: color-mix(
+    in srgb,
+    #fff 40%,
+    var(--tasamur-dark-background)
+  );
+  --color-grey-600: color-mix(
+    in srgb,
+    #fff 30%,
+    var(--tasamur-dark-background)
+  );
+  --color-grey-700: color-mix(
+    in srgb,
+    #fff 24%,
+    var(--tasamur-dark-background)
+  );
+  --color-grey-800: color-mix(
+    in srgb,
+    #fff 16%,
+    var(--tasamur-dark-background)
+  );
+  --color-grey-900: color-mix(in srgb, #fff 5%, var(--tasamur-dark-background));
+  --color-grey-950: var(--tasamur-dark-background);
+}
+
+@mixin common {
+  --color-bg-brand-base: var(--tasamur-primary);
+  --color-bg-brand-base-hover: var(--tasamur-deep-teal);
+}
+
+@mixin dark {
+  @include common;
+
+  // Primary teal is suitable for buttons; use soft teal for text on dark surfaces.
+  --color-text-brand: var(--tasamur-soft-teal);
+  --color-text-brand-on-inverted: var(--tasamur-deep-teal);
+  --color-bg-brand-soft: color-mix(
+    in srgb,
+    var(--tasamur-primary) 35%,
+    var(--tasamur-dark-background)
+  );
+  --color-bg-brand-softest: color-mix(
+    in srgb,
+    var(--tasamur-primary) 15%,
+    var(--tasamur-dark-background)
+  );
+  --color-border-brand-soft: var(--tasamur-deep-teal);
+}
+
+@mixin light {
+  @include common;
+
+  --color-text-primary: var(--tasamur-dark-text);
+  --color-bg-primary: var(--tasamur-light-background);
+  --color-bg-secondary: var(--color-white);
+  --color-text-brand: var(--tasamur-deep-teal);
+  --color-text-brand-on-inverted: var(--tasamur-soft-teal);
+  --color-bg-brand-soft: var(--tasamur-soft-teal);
+  --color-bg-brand-softest: color-mix(
+    in srgb,
+    var(--tasamur-soft-teal) 40%,
+    var(--tasamur-light-background)
+  );
+  --color-border-brand-soft: var(--tasamur-soft-teal);
+}

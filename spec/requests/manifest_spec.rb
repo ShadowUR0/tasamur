@@ -16,7 +16,12 @@ RSpec.describe 'Manifest' do
       expect(response.parsed_body)
         .to include(
           id: '/home',
-          name: 'Mastodon'
+          name: 'Tasamur',
+          short_name: 'Tasamur',
+          theme_color: Themes::THEME_COLORS[:dark],
+          background_color: Themes::THEME_COLORS[:dark],
+          prefer_related_applications: false,
+          related_applications: []
         )
     end
   end

@@ -1,0 +1,74 @@
+---
+# Tasamur presentation overrides; keep upstream locale catalogs intact.
+en:
+  about:
+    about_mastodon_html: Tasamur is a social network for sharing updates and connecting with people.
+    hosted_on: Tasamur on %{domain}
+  appearance:
+    boosting_preferences: Reposting preferences
+    boosting_preferences_info_html: '<strong>Tip:</strong> Regardless of settings, <kbd>Shift</kbd> + <kbd>Click</kbd> on the %{icon} Repost icon will immediately repost.'
+  auth:
+    description:
+      prefix_invited_by_user: '@%{name} invites you to join Tasamur!'
+      prefix_sign_up: Sign up on Tasamur today!
+      suffix: Follow people, share updates, and join conversations.
+    setup:
+      email_settings_hint_html: Click the link we sent to %{email} to begin using Tasamur. We'll wait right here.
+    sign_up:
+      preamble: Create your Tasamur account to follow people, share updates, and join conversations.
+  errors:
+    noscript_html: 'To use the Tasamur web application, please enable JavaScript. Alternatively, try a <a href="%{apps_path}">compatible native app</a>.'
+  notification_mailer:
+    reblog:
+      body: 'Your post was reposted by %{name}:'
+      subject: '%{name} reposted your post'
+      title: New repost
+  sessions:
+    explanation: These are the web browsers currently logged in to your Tasamur account.
+  settings:
+    back: Back to Tasamur
+  simple_form:
+    hints:
+      defaults:
+        setting_aggregate_reblogs: Do not show new reposts for posts that have been recently reposted (only affects newly-received reposts)
+        setting_boost_modal: When enabled, reposting will first open a confirmation dialog in which you can change the visibility of your repost.
+        setting_quick_boosting_html: When enabled, clicking on the %{boost_icon} Repost icon will immediately repost instead of opening the repost/quote dropdown menu. Relocates the quoting action to the %{options_icon} (Options) menu.
+    labels:
+      defaults:
+        setting_aggregate_reblogs: Group reposts in timelines
+        setting_boost_modal: Control reposting visibility
+        setting_quick_boosting: Enable quick reposting
+      notification_emails:
+        reblog: Someone reposted your post
+  statuses:
+    boosted_from_html: Reposted from %{acct_link}
+    pin_errors:
+      reblog: A repost cannot be pinned
+    visibilities:
+      public_long: Anyone on and off Tasamur
+      unlisted_long: Hidden from Tasamur search results, trending, and public timelines
+  statuses_cleanup:
+    ignore_reblogs: Ignore reposts
+    interaction_exceptions_explanation: Posts which temporarily exceed the favorite or repost threshold may be retained even if they are later decreased.
+    min_reblogs: Keep posts reposted at least
+    min_reblogs_hint: Doesn't delete any of your posts that has been reposted at least this number of times. Leave blank to delete posts regardless of their number of reposts
+  themes:
+    default: Tasamur
+  two_factor_authentication:
+    role_requirement: '%{domain} requires you to set up Two-Factor Authentication before you can use Tasamur.'
+  unsubscriptions:
+    notification_emails:
+      reblog: repost notification emails
+  user_mailer:
+    backup_ready:
+      explanation: You requested a full backup of your Tasamur account.
+    welcome:
+      apps_step: Explore compatible Mastodon apps.
+      feature_audience: Share your interests, connect with people, and build an audience on Tasamur.
+      feature_control: Choose who to follow and see their posts in chronological order. Use lists, filters, muting, and blocking to shape what you see.
+      feature_creativity: Express yourself with text, photos, audio, video, and polls. Add accessibility descriptions and content warnings to help others enjoy your posts.
+      feature_moderation: Tasamur’s rules and moderation tools help you participate safely. Report harmful content, and use blocking and muting to control your experience.
+      follow_step: Following interesting people is what Tasamur is all about.
+      share_step: Let your friends know how to find you on Tasamur.
+      share_title: Share your Tasamur profile
+      subject: Welcome to Tasamur

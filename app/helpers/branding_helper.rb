@@ -11,17 +11,14 @@ module BrandingHelper
   end
 
   def _logo_as_symbol_wordmark
-    tag.svg(viewBox: '0 0 261 66', class: 'logo logo--wordmark') do
-      tag.title('Mastodon') +
-        tag.use(href: '#logo-symbol-wordmark')
-    end
+    render_logo(:wordmark)
   end
 
   def _logo_as_symbol_icon
-    tag.svg(tag.use(href: '#logo-symbol-icon'), viewBox: '0 0 79 79', class: 'logo logo--icon')
+    render_logo
   end
 
-  def render_logo
-    image_tag(frontend_asset_path('images/logo.svg'), alt: 'Mastodon', class: 'logo logo--icon')
+  def render_logo(version = :icon)
+    image_tag(frontend_asset_path('images/logo.svg'), alt: 'Tasamur', class: "logo logo--#{version}")
   end
 end

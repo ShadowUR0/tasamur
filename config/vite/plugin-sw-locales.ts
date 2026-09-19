@@ -12,6 +12,8 @@ import { defineMessages } from 'react-intl';
 
 import type { Plugin, ResolvedConfig } from 'vite';
 
+import { applyTasamurMessages } from '../../app/javascript/mastodon/locales/tasamur';
+
 const translations = defineMessages({
   mentioned_you: {
     id: 'notification.mentioned_you',
@@ -79,11 +81,13 @@ export function MastodonServiceWorkerLocales(): Plugin {
 
             const filteredLocale: Record<string, string> = {};
 
-            Object.entries(full).forEach(([key, value]) => {
-              if (KEEP_KEYS.includes(key)) {
-                filteredLocale[key] = value;
-              }
-            });
+            Object.entries(applyTasamurMessages(locale, full)).forEach(
+              ([key, value]) => {
+                if (KEEP_KEYS.includes(key)) {
+                  filteredLocale[key] = value;
+                }
+              },
+            );
 
             Object.entries(CUSTOM_TRANSLATIONS).forEach(([key, value]) => {
               const translation = full[value];

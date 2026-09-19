@@ -2,6 +2,7 @@ import { Semaphore } from 'async-mutex';
 
 import type { LocaleData } from './global_locale';
 import { isLocaleLoaded, setLocale } from './global_locale';
+import { applyTasamurMessages } from './tasamur';
 
 const localeLoadingSemaphore = new Semaphore(1);
 
@@ -30,6 +31,13 @@ export async function loadLocale() {
 
     const { default: localeData } = await localeFile();
 
-    setLocale({ messages: localeData, locale });
+    const messagesLocale = Object.hasOwn(localeFiles, `./${locale}.json`)
+      ? locale
+      : 'en';
+
+    setLocale({
+      messages: applyTasamurMessages(messagesLocale, localeData),
+      locale,
+    });
   });
 }

@@ -2,11 +2,13 @@
 @use 'theme/dark';
 @use 'theme/light';
 @use 'theme/utils';
+@use 'theme/tasamur';
 @use 'shape';
 @use 'type';
 
 html {
   @include base.palette;
+  @include tasamur.palette;
   @include shape.space;
   @include shape.radius;
   @include type.font-size;
@@ -19,6 +21,7 @@ html:not([data-color-scheme]) {
   color-scheme: dark;
 
   @include dark.tokens;
+  @include tasamur.dark;
   @include utils.invert-on-dark;
 
   &[data-contrast='high'],
@@ -31,10 +34,13 @@ html:not([data-color-scheme]) {
   color-scheme: light;
 
   @include light.tokens;
+  @include tasamur.light;
   @include utils.invert-on-light;
 
   &[data-contrast='high'],
   [data-contrast='high'] & {
     @include light.contrast-overrides;
+
+    --color-text-brand: var(--tasamur-deep-teal);
   }
 }
