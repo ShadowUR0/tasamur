@@ -133,10 +133,10 @@ RSpec.describe NotificationMailer do
     it 'renders the email' do
       expect { mail.deliver }
         .to send_email(
-          subject: 'bob boosted your post'
+          subject: 'bob reposted your post'
         )
       expect(mail.text_part.body)
-        .to match('Your post was boosted by bob')
+        .to match('Your post was reposted by bob')
         .and match('The body of the own status')
       expect(mail)
         .to have_thread_headers
