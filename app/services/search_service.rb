@@ -38,7 +38,8 @@ class SearchService < BaseService
       use_searchable_text: true,
       following: @following,
       start_with_hashtag: @query.start_with?('#'),
-      query_fasp: @options[:query_fasp]
+      query_fasp: @options[:query_fasp],
+      local: @options[:local]
     )
   end
 
@@ -50,7 +51,8 @@ class SearchService < BaseService
       offset: @offset,
       account_id: @options[:account_id],
       min_id: @options[:min_id],
-      max_id: @options[:max_id]
+      max_id: @options[:max_id],
+      local: @options[:local]
     )
   end
 
@@ -76,7 +78,13 @@ class SearchService < BaseService
   end
 
   def url_resource
+    return if @options[:local] && !local_url_query?
+
     @url_resource ||= ResolveURLService.new.call(@query, on_behalf_of: @account)
+  end
+
+  def local_url_query?
+    TagManager.instance.local_url?(@query)
   end
 
   def url_resource_symbol

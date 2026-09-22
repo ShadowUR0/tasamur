@@ -11,12 +11,15 @@ class Api::V1::Statuses::BookmarksController < Api::V1::Statuses::BaseController
   end
 
   def destroy
-    bookmark = current_account.bookmarks.find_by(status_id: params[:status_id])
+    bookmarks = current_account.bookmarks
+    bookmarks = bookmarks.joins(:status).merge(Status.local_network) if single_network_mode?
+    bookmark = bookmarks.find_by(status_id: params[:status_id])
 
     if bookmark
       @status = bookmark.status
     else
-      @status = Status.find(params[:status_id])
+      scope = single_network_mode? ? Status.local_network : Status.all
+      @status = scope.find(params[:status_id])
       authorize @status, :show?
     end
 

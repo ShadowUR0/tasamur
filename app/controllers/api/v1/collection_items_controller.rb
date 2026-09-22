@@ -44,13 +44,15 @@ class Api::V1::CollectionItemsController < Api::BaseController
   private
 
   def set_collection
-    @collection = Collection.find(params[:collection_id])
+    scope = single_network_mode? ? Collection.local : Collection.all
+    @collection = scope.find(params[:collection_id])
   end
 
   def set_account
     return render(json: { error: '`account_id` parameter is missing' }, status: 422) if params[:account_id].blank?
 
-    @account = Account.without_requested_deletion.find(params[:account_id])
+    scope = single_network_mode? ? Account.local : Account.all
+    @account = scope.without_requested_deletion.find(params[:account_id])
   end
 
   def set_collection_item

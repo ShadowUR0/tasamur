@@ -15,6 +15,19 @@ RSpec.describe ActivityPub::DeliveryWorker do
   end
 
   describe 'perform' do
+    context 'when Tasamur single-network mode is enabled' do
+      before do
+        allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+        stub_request(:post, url).to_return(status: 200)
+      end
+
+      it 'does not deliver activities to an external inbox' do
+        subject.perform(payload, sender.id, url)
+
+        expect(a_request(:post, url)).to_not have_been_made
+      end
+    end
+
     context 'with successful request' do
       before { stub_request(:post, url).to_return(status: 200) }
 

@@ -40,6 +40,7 @@ class Api::V2::SearchController < Api::BaseController
   end
 
   def handle_fasp_requests
+    return if single_network_mode?
     return unless Mastodon::Feature.fasp_enabled?
     return if params[:q].blank?
 
@@ -74,6 +75,7 @@ class Api::V2::SearchController < Api::BaseController
   def combined_search_params
     search_params.merge(
       resolve: truthy_param?(:resolve),
+      local: single_network_mode?,
       exclude_unreviewed: truthy_param?(:exclude_unreviewed),
       following: truthy_param?(:following),
       query_fasp: @query_fasp

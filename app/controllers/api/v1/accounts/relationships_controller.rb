@@ -6,6 +6,7 @@ class Api::V1::Accounts::RelationshipsController < Api::BaseController
 
   def index
     @accounts = Account.without_requested_deletion.where(id: account_ids).select(:id, :domain)
+    @accounts.merge!(Account.local) if single_network_mode?
     @accounts.merge!(Account.without_suspended) unless truthy_param?(:with_suspended)
     render json: @accounts, each_serializer: REST::RelationshipSerializer, relationships: relationships
   end

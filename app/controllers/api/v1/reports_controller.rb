@@ -19,7 +19,8 @@ class Api::V1::ReportsController < Api::BaseController
   private
 
   def reported_account
-    Account.find(report_params[:account_id])
+    scope = single_network_mode? ? Account.local : Account.all
+    scope.find(report_params[:account_id])
   end
 
   def report_params

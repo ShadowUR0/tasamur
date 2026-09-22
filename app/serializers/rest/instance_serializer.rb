@@ -112,15 +112,15 @@ class REST::InstanceSerializer < ActiveModel::Serializer
       timelines_access: {
         live_feeds: {
           local: Setting.local_live_feed_access,
-          remote: Setting.remote_live_feed_access,
+          remote: single_network_mode? ? 'disabled' : Setting.remote_live_feed_access,
         },
         hashtag_feeds: {
           local: Setting.local_topic_feed_access,
-          remote: Setting.remote_topic_feed_access,
+          remote: single_network_mode? ? 'disabled' : Setting.remote_topic_feed_access,
         },
         trending_link_feeds: {
           local: Setting.local_topic_feed_access,
-          remote: Setting.remote_topic_feed_access,
+          remote: single_network_mode? ? 'disabled' : Setting.remote_topic_feed_access,
         },
       },
 
@@ -159,6 +159,10 @@ class REST::InstanceSerializer < ActiveModel::Serializer
 
   def limited_federation?
     Rails.configuration.x.mastodon.limited_federation_mode
+  end
+
+  def single_network_mode?
+    Rails.configuration.x.mastodon.single_network_mode
   end
 
   def markdown

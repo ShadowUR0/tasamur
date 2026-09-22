@@ -69,7 +69,8 @@ class Api::V1::CollectionsController < Api::BaseController
   private
 
   def set_account
-    @account = Account.without_requested_deletion.find(params[:account_id])
+    scope = single_network_mode? ? Account.local : Account.all
+    @account = scope.without_requested_deletion.find(params[:account_id])
   end
 
   def set_collections
@@ -82,7 +83,8 @@ class Api::V1::CollectionsController < Api::BaseController
   end
 
   def set_collection
-    @collection = Collection.find(params[:id])
+    scope = single_network_mode? ? Collection.local : Collection.all
+    @collection = scope.find(params[:id])
   end
 
   def collection_creation_params

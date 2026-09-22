@@ -39,6 +39,8 @@ class PublicFeed
   attr_reader :account, :options
 
   def incompatible_feed_settings?
+    return true if Rails.configuration.x.mastodon.single_network_mode && options[:remote] && !options[:local]
+
     (local_only? && !user_has_access_to_feed?(local_feed_setting)) || (remote_only? && !user_has_access_to_feed?(remote_feed_setting))
   end
 
@@ -70,10 +72,14 @@ class PublicFeed
   end
 
   def local_only?
+    return true if Rails.configuration.x.mastodon.single_network_mode
+
     (options[:local] && !options[:remote]) || !user_has_access_to_feed?(remote_feed_setting)
   end
 
   def remote_only?
+    return false if Rails.configuration.x.mastodon.single_network_mode
+
     (options[:remote] && !options[:local]) || !user_has_access_to_feed?(local_feed_setting)
   end
 
@@ -90,7 +96,7 @@ class PublicFeed
   end
 
   def local_only_scope
-    Status.local
+    Rails.configuration.x.mastodon.single_network_mode ? Status.local_network : Status.local
   end
 
   def remote_only_scope

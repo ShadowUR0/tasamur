@@ -24,10 +24,14 @@ class Api::V1::DirectoriesController < Api::BaseController
   def accounts_scope
     Account.discoverable.tap do |scope|
       scope.merge!(account_order_scope)
-      scope.merge!(local_account_scope) if local_accounts?
+      scope.merge!(local_account_scope) if local_accounts_only?
       scope.merge!(account_exclusion_scope) if current_account
-      scope.merge!(account_domain_block_scope) if current_account && !local_accounts?
+      scope.merge!(account_domain_block_scope) if current_account && !local_accounts_only?
     end.includes(:account_stat, user: :role)
+  end
+
+  def local_accounts_only?
+    local_accounts? || single_network_mode?
   end
 
   def local_accounts?

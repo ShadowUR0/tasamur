@@ -28,7 +28,8 @@ class Api::V1::BookmarksController < Api::BaseController
   end
 
   def account_bookmarks
-    current_account.bookmarks
+    scope = current_account.bookmarks
+    single_network_mode? ? scope.joins(:status).merge(Status.local_network) : scope
   end
 
   def next_path

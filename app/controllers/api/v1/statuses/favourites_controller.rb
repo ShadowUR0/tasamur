@@ -11,14 +11,17 @@ class Api::V1::Statuses::FavouritesController < Api::V1::Statuses::BaseControlle
   end
 
   def destroy
-    fav = current_account.favourites.find_by(status_id: params[:status_id])
+    favourites = current_account.favourites
+    favourites = favourites.joins(:status).merge(Status.local_network) if single_network_mode?
+    fav = favourites.find_by(status_id: params[:status_id])
 
     if fav
       @status = fav.status
       count = [@status.favourites_count - 1, 0].max
       UnfavouriteWorker.perform_async(current_account.id, @status.id)
     else
-      @status = Status.find(params[:status_id])
+      scope = single_network_mode? ? Status.local_network : Status.all
+      @status = scope.find(params[:status_id])
       count = @status.favourites_count
       authorize @status, :show?
     end

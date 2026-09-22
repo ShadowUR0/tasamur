@@ -53,7 +53,7 @@ class Api::V1::Notifications::RequestsController < Api::BaseController
   private
 
   def load_requests
-    requests = NotificationRequest.where(account: current_account).without_suspended.includes(:last_status, from_account: [:account_stat, :user]).to_a_paginated_by_id(
+    requests = request_scope.includes(:last_status, from_account: [:account_stat, :user]).to_a_paginated_by_id(
       limit_param(DEFAULT_ACCOUNTS_LIMIT),
       params_slice(:max_id, :since_id, :min_id)
     )
@@ -68,11 +68,16 @@ class Api::V1::Notifications::RequestsController < Api::BaseController
   end
 
   def set_request
-    @request = NotificationRequest.where(account: current_account).find(params[:id])
+    @request = request_scope.find(params[:id])
   end
 
   def set_requests
-    @requests = NotificationRequest.where(account: current_account, id: Array(params[:id]).uniq.map(&:to_i))
+    @requests = request_scope.where(id: Array(params[:id]).uniq.map(&:to_i))
+  end
+
+  def request_scope
+    scope = NotificationRequest.where(account: current_account).without_suspended
+    single_network_mode? ? scope.merge(Account.local) : scope
   end
 
   def next_path

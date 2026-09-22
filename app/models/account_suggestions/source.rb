@@ -10,7 +10,7 @@ class AccountSuggestions::Source
   protected
 
   def base_account_scope(account)
-    Account
+    scope = Account
       .searchable
       .where(discoverable: true)
       .without_silenced
@@ -21,6 +21,8 @@ class AccountSuggestions::Source
       .not_domain_blocked_by_account(account)
       .where.not(id: account.id)
       .where.not(follow_recommendation_mutes_sql, id: account.id)
+
+    Rails.configuration.x.mastodon.single_network_mode ? scope.local : scope
   end
 
   def follows_sql

@@ -28,6 +28,7 @@ class Api::V1::Trends::StatusesController < Api::BaseController
 
   def statuses_from_trends
     scope = Trends.statuses.query.allowed.in_locale(content_locale)
+    scope = scope.merge(Status.local_network) if single_network_mode?
     scope = scope.filtered_for(current_account) if user_signed_in?
     scope
   end

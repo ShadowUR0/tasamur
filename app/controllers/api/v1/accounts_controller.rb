@@ -84,11 +84,15 @@ class Api::V1::AccountsController < Api::BaseController
   private
 
   def set_account
-    @account = Account.without_requested_deletion.find(params[:id])
+    @account = account_scope.without_requested_deletion.find(params[:id])
   end
 
   def set_accounts
-    @accounts = Account.where(id: account_ids).without_unapproved.without_requested_deletion
+    @accounts = account_scope.where(id: account_ids).without_unapproved.without_requested_deletion
+  end
+
+  def account_scope
+    single_network_mode? ? Account.local : Account.all
   end
 
   def check_account_approval

@@ -19,8 +19,11 @@ class Api::V1::Accounts::StatusesController < Api::V1::Accounts::BaseController
   end
 
   def preloaded_account_statuses
+    scope = AccountStatusesFilter.new(@account, current_account, params).results
+    scope = scope.merge(Status.local_network) if single_network_mode?
+
     preload_collection_paginated_by_id(
-      AccountStatusesFilter.new(@account, current_account, params).results,
+      scope,
       Status,
       limit_param(DEFAULT_STATUSES_LIMIT),
       params_slice(:max_id, :since_id, :min_id)

@@ -18,6 +18,18 @@ RSpec.describe 'Peers' do
         expect(response.parsed_body)
           .to be_an(Array)
       end
+
+      context 'when Tasamur single-network mode is enabled' do
+        before do
+          allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+        end
+
+        it 'returns http not found' do
+          get api_v1_instance_peers_path
+
+          expect(response).to have_http_status(404)
+        end
+      end
     end
 
     context 'with peers api diabled' do

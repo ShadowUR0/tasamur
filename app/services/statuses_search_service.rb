@@ -31,6 +31,10 @@ class StatusesSearchService < BaseService
   def status_search_results
     request             = parsed_query.request
     results             = elastic_stoplight_wrapper.run { request.timeout(ES_QUERY_TIMEOUT).collapse(field: :id).order(id: { order: :desc }).limit(@limit).offset(@offset).objects.compact }
+    if @options[:local]
+      local_status_ids = Status.local_network.where(id: results.map(&:id)).pluck(:id).to_set
+      results.select! { |status| local_status_ids.include?(status.id) }
+    end
     account_ids         = results.map(&:account_id)
     account_domains     = results.map(&:account_domain)
 

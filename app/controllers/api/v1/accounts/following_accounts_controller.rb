@@ -26,7 +26,8 @@ class Api::V1::Accounts::FollowingAccountsController < Api::V1::Accounts::BaseCo
   end
 
   def default_accounts
-    Account.includes(:passive_relationships, :account_stat, :user).references(:passive_relationships)
+    scope = Account.includes(:passive_relationships, :account_stat, :user).references(:passive_relationships)
+    single_network_mode? ? scope.local : scope
   end
 
   def paginated_follows

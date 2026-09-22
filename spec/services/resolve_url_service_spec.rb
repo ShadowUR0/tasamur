@@ -6,6 +6,26 @@ RSpec.describe ResolveURLService do
   subject { described_class.new }
 
   describe '#call' do
+    context 'when Tasamur single-network mode is enabled' do
+      before do
+        allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+      end
+
+      it 'does not fetch or return an external resource' do
+        allow(FetchResourceService).to receive(:new)
+
+        expect(subject.call('https://remote.example/@alice')).to be_nil
+        expect(FetchResourceService).to_not have_received(:new)
+      end
+
+      it 'resolves a domain-qualified local profile URL' do
+        account = Fabricate(:account)
+        url = "https://#{Rails.configuration.x.local_domain}/@#{account.username}@#{Rails.configuration.x.local_domain}"
+
+        expect(subject.call(url)).to eq(account)
+      end
+    end
+
     it 'returns nil when there is no resource url' do
       url = 'http://example.com/missing-resource'
       Fabricate(:account, uri: url, domain: 'example.com')

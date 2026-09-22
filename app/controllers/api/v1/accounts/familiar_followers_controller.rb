@@ -13,6 +13,7 @@ class Api::V1::Accounts::FamiliarFollowersController < Api::BaseController
 
   def set_accounts
     @accounts = Account.without_suspended.where(id: account_ids).select(:id, :hide_collections)
+    @accounts.merge!(Account.local) if single_network_mode?
   end
 
   def familiar_followers

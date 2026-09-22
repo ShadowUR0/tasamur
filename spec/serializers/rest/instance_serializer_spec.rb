@@ -27,5 +27,19 @@ RSpec.describe REST::InstanceSerializer do
           )
         )
     end
+
+    context 'when Tasamur single-network mode is enabled' do
+      before do
+        allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+      end
+
+      it 'advertises remote feeds as disabled while retaining the API shape' do
+        timelines_access = serialization.dig('configuration', 'timelines_access')
+
+        expect(timelines_access.dig('live_feeds', 'remote')).to eq('disabled')
+        expect(timelines_access.dig('hashtag_feeds', 'remote')).to eq('disabled')
+        expect(timelines_access.dig('trending_link_feeds', 'remote')).to eq('disabled')
+      end
+    end
   end
 end

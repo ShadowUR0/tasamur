@@ -57,6 +57,7 @@ module Account::Search
     LEFT JOIN users ON accounts.id = users.account_id
     LEFT JOIN account_stats AS s ON accounts.id = s.account_id
     WHERE to_tsquery('simple', :tsquery) @@ #{TEXT_SEARCH_RANKS}
+      AND (:local = FALSE OR accounts.domain IS NULL)
       AND accounts.suspended_at IS NULL AND accounts.requested_deletion_at IS NULL
       AND accounts.moved_to_account_id IS NULL
       AND (accounts.domain IS NOT NULL OR (users.approved = TRUE AND users.confirmed_at IS NOT NULL))
@@ -80,6 +81,7 @@ module Account::Search
     LEFT JOIN account_stats AS s ON accounts.id = s.account_id
     WHERE accounts.id IN (SELECT * FROM first_degree)
       AND to_tsquery('simple', :tsquery) @@ #{TEXT_SEARCH_RANKS}
+      AND (:local = FALSE OR accounts.domain IS NULL)
       AND accounts.suspended_at IS NULL AND accounts.requested_deletion_at IS NULL
       AND accounts.moved_to_account_id IS NULL
     GROUP BY accounts.id, s.id
@@ -98,6 +100,7 @@ module Account::Search
     LEFT JOIN users ON accounts.id = users.account_id
     LEFT JOIN account_stats AS s ON accounts.id = s.account_id
     WHERE to_tsquery('simple', :tsquery) @@ #{TEXT_SEARCH_RANKS}
+      AND (:local = FALSE OR accounts.domain IS NULL)
       AND accounts.suspended_at IS NULL AND accounts.requested_deletion_at IS NULL
       AND accounts.moved_to_account_id IS NULL
       AND (accounts.domain IS NOT NULL OR (users.approved = TRUE AND users.confirmed_at IS NOT NULL))
@@ -121,19 +124,19 @@ module Account::Search
   end
 
   class_methods do
-    def search_for(terms, limit: DEFAULT_LIMIT, offset: 0)
+    def search_for(terms, limit: DEFAULT_LIMIT, offset: 0, local: false)
       tsquery = generate_query_for_search(terms)
 
-      find_by_sql([BASIC_SEARCH_SQL, { limit: limit, offset: offset, tsquery: tsquery }]).tap do |records|
+      find_by_sql([BASIC_SEARCH_SQL, { limit: limit, offset: offset, tsquery: tsquery, local: local }]).tap do |records|
         ActiveRecord::Associations::Preloader.new(records: records, associations: [:account_stat, { user: :role }]).call
       end
     end
 
-    def advanced_search_for(terms, account, limit: DEFAULT_LIMIT, following: false, offset: 0)
+    def advanced_search_for(terms, account, limit: DEFAULT_LIMIT, following: false, offset: 0, local: false)
       tsquery = generate_query_for_search(terms)
       sql_template = following ? ADVANCED_SEARCH_WITH_FOLLOWING : ADVANCED_SEARCH_WITHOUT_FOLLOWING
 
-      find_by_sql([sql_template, { id: account.id, limit: limit, offset: offset, tsquery: tsquery }]).tap do |records|
+      find_by_sql([sql_template, { id: account.id, limit: limit, offset: offset, tsquery: tsquery, local: local }]).tap do |records|
         ActiveRecord::Associations::Preloader.new(records: records, associations: [:account_stat, { user: :role }]).call
       end
     end

@@ -33,6 +33,12 @@ class Api::V1::Statuses::ContextsController < Api::BaseController
 
     ancestors_results   = @status.in_reply_to_id.nil? ? [] : @status.ancestors(ancestors_limit, current_account)
     descendants_results = @status.descendants(descendants_limit, current_account, descendants_depth_limit)
+
+    if single_network_mode?
+      visible_status_ids = Status.local_network.where(id: (ancestors_results + descendants_results).map(&:id)).pluck(:id).to_set
+      ancestors_results.select! { |status| visible_status_ids.include?(status.id) }
+      descendants_results.select! { |status| visible_status_ids.include?(status.id) }
+    end
     loaded_ancestors    = preload_collection(ancestors_results, Status)
     loaded_descendants  = preload_collection(descendants_results, Status)
 
@@ -59,7 +65,8 @@ class Api::V1::Statuses::ContextsController < Api::BaseController
   private
 
   def set_status
-    @status = Status.find(params[:status_id])
+    scope = single_network_mode? ? Status.local_network : Status.all
+    @status = scope.find(params[:status_id])
     authorize @status, :show?
   rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     not_found

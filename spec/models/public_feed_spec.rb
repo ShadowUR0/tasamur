@@ -41,6 +41,30 @@ RSpec.describe PublicFeed do
       expect(subject).to_not include(silenced_status.id)
     end
 
+    context 'when Tasamur single-network mode is enabled' do
+      subject { described_class.new(nil, with_reblogs: true).get(20).map(&:id) }
+
+      let!(:local_status) { Fabricate(:status) }
+      let!(:remote_status) { Fabricate(:status, account: Fabricate(:account, domain: 'remote.example')) }
+      let!(:local_reblog) { Fabricate(:status, reblog: local_status) }
+      let!(:remote_reblog) { Fabricate(:status, reblog: remote_status) }
+
+      before do
+        allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+      end
+
+      it 'shows local posts and local reposts without exposing remote content' do
+        expect(subject).to include(local_status.id, local_reblog.id)
+        expect(subject).to_not include(remote_status.id, remote_reblog.id)
+      end
+
+      it 'does not expose the remote-only feed' do
+        results = described_class.new(nil, remote: true).get(20)
+
+        expect(results).to be_empty
+      end
+    end
+
     context 'without local_only option' do
       subject { described_class.new(viewer).get(20).map(&:id) }
 

@@ -48,6 +48,23 @@ RSpec.describe 'Public' do
         it_behaves_like 'a successful request to the public timeline'
       end
 
+      context 'when Tasamur single-network mode is enabled' do
+        before do
+          allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+        end
+
+        let(:expected_statuses) { [local_status, media_status] }
+
+        it_behaves_like 'a successful request to the public timeline'
+
+        context 'with remote param' do
+          let(:params) { { remote: true } }
+          let(:expected_statuses) { [] }
+
+          it_behaves_like 'a successful request to the public timeline'
+        end
+      end
+
       context 'with local param' do
         let(:params) { { local: true } }
         let(:expected_statuses) { [local_status, media_status] }

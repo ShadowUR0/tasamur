@@ -25,7 +25,8 @@ class Api::V1::FollowRequestsController < Api::BaseController
   private
 
   def account
-    @account ||= Account.find(params[:id])
+    scope = single_network_mode? ? Account.local : Account.all
+    @account ||= scope.find(params[:id])
   end
 
   def relationships(**)
@@ -37,11 +38,14 @@ class Api::V1::FollowRequestsController < Api::BaseController
   end
 
   def default_accounts
-    Account.without_suspended.includes(:follow_requests, :account_stat, :user).references(:follow_requests)
+    scope = Account.without_suspended.includes(:follow_requests, :account_stat, :user).references(:follow_requests)
+    single_network_mode? ? scope.local : scope
   end
 
   def paginated_follow_requests
-    FollowRequest.where(target_account: current_account).paginate_by_max_id(
+    scope = FollowRequest.where(target_account: current_account)
+    scope = scope.joins(:account).merge(Account.local) if single_network_mode?
+    scope.paginate_by_max_id(
       limit_param(DEFAULT_ACCOUNTS_LIMIT),
       params[:max_id],
       params[:since_id]

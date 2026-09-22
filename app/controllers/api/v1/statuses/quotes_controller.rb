@@ -47,7 +47,8 @@ class Api::V1::Statuses::QuotesController < Api::V1::Statuses::BaseController
   end
 
   def default_statuses
-    Status.includes(:quote).references(:quote)
+    scope = Status.includes(:quote).references(:quote)
+    single_network_mode? ? scope.merge(Status.local_network) : scope
   end
 
   def paginated_quotes

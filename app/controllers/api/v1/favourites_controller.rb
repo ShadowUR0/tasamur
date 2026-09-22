@@ -28,7 +28,8 @@ class Api::V1::FavouritesController < Api::BaseController
   end
 
   def account_favourites
-    current_account.favourites
+    scope = current_account.favourites
+    single_network_mode? ? scope.joins(:status).merge(Status.local_network) : scope
   end
 
   def next_path

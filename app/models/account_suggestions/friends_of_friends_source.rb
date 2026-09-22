@@ -7,7 +7,7 @@ class AccountSuggestions::FriendsOfFriendsSource < AccountSuggestions::Source
   end
 
   def source_query(account, limit: DEFAULT_LIMIT)
-    Account.find_by_sql([<<~SQL.squish, { id: account.id, limit: limit }]).map { |row| [row.id, row.frequency, row.followers_count] }
+    Account.find_by_sql([<<~SQL.squish, { id: account.id, limit: limit, local: Rails.configuration.x.mastodon.single_network_mode }]).map { |row| [row.id, row.frequency, row.followers_count] }
       WITH first_degree AS (
           SELECT target_account_id
           FROM follows
@@ -33,6 +33,7 @@ class AccountSuggestions::FriendsOfFriendsSource < AccountSuggestions::Source
         AND accounts.silenced_at IS NULL
         AND accounts.moved_to_account_id IS NULL
         AND accounts.memorial = FALSE
+        AND (:local = FALSE OR accounts.domain IS NULL)
         AND follow_recommendation_mutes.target_account_id IS NULL
       GROUP BY accounts.id, account_stats.id
       ORDER BY frequency DESC, account_stats.followers_count ASC

@@ -10,6 +10,8 @@ class ResolveURLService < BaseService
     @url          = url
     @on_behalf_of = on_behalf_of
 
+    return if single_network_mode? && !local_url?
+
     if local_url?
       process_local_url
     elsif !fetched_resource.nil?
@@ -111,9 +113,13 @@ class ResolveURLService < BaseService
         check_local_status(status)
       elsif recognized_params[:any].blank?
         username, domain = recognized_params[:username_with_domain].gsub(/\A@/, '').split('@')
-        return unless username.present? && domain.present?
+        return if username.blank?
 
-        Account.find_remote(username, domain)
+        if domain.blank? || TagManager.instance.local_domain?(domain)
+          Account.find_local(username)
+        elsif !single_network_mode?
+          Account.find_remote(username, domain)
+        end
       end
     when 'collections'
       return unless recognized_params[:action] == 'show'
@@ -124,6 +130,7 @@ class ResolveURLService < BaseService
 
   def check_collection(collection)
     return if collection.nil?
+    return if single_network_mode? && collection.remote?
 
     authorize_with @on_behalf_of, collection, :show?
   rescue Mastodon::NotPermittedError
@@ -132,6 +139,7 @@ class ResolveURLService < BaseService
 
   def check_local_status(status)
     return if status.nil?
+    return if single_network_mode? && !Status.local_network.exists?(id: status.id)
 
     authorize_with @on_behalf_of, status, :show?
     status

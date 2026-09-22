@@ -10,6 +10,9 @@ module DomainControlHelper
                uri_or_domain
              end
 
+    return false if TagManager.instance.local_domain?(domain)
+    return true if single_network_mode?
+
     if limited_federation_mode?
       !DomainAllow.allowed?(domain)
     else
@@ -19,5 +22,9 @@ module DomainControlHelper
 
   def limited_federation_mode?
     Rails.configuration.x.mastodon.limited_federation_mode
+  end
+
+  def single_network_mode?
+    Rails.configuration.x.mastodon.single_network_mode
   end
 end

@@ -33,7 +33,9 @@ class Api::V1::Accounts::EndorsementsController < Api::V1::Accounts::BaseControl
   end
 
   def paginated_endorsed_accounts
-    @account.endorsed_accounts.without_suspended.includes(:account_stat, :user).paginate_by_max_id(
+    scope = @account.endorsed_accounts.without_suspended.includes(:account_stat, :user)
+    scope = scope.local if single_network_mode?
+    scope.paginate_by_max_id(
       limit_param(DEFAULT_ACCOUNTS_LIMIT),
       params[:max_id],
       params[:since_id]

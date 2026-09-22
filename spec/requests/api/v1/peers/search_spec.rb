@@ -4,6 +4,19 @@ require 'rails_helper'
 
 RSpec.describe 'API Peers Search' do
   describe 'GET /api/v1/peers/search' do
+    context 'when Tasamur single-network mode is enabled' do
+      before do
+        Setting.peers_api_enabled = true
+        allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+      end
+
+      it 'returns http not found' do
+        get '/api/v1/peers/search', params: { q: 'remote.example' }
+
+        expect(response).to have_http_status(404)
+      end
+    end
+
     context 'when peers api is disabled' do
       before do
         Setting.peers_api_enabled = false

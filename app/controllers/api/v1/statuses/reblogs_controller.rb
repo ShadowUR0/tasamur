@@ -20,7 +20,9 @@ class Api::V1::Statuses::ReblogsController < Api::V1::Statuses::BaseController
   end
 
   def destroy
-    @status = current_account.statuses.find_by(reblog_of_id: params[:status_id])
+    statuses = current_account.statuses
+    statuses = statuses.merge(Status.local_network) if single_network_mode?
+    @status = statuses.find_by(reblog_of_id: params[:status_id])
 
     if @status
       authorize @status, :unreblog?
@@ -29,7 +31,7 @@ class Api::V1::Statuses::ReblogsController < Api::V1::Statuses::BaseController
       @status.discard
       RemovalWorker.perform_async(@status.id)
     else
-      @reblog = Status.find(params[:status_id])
+      @reblog = status_scope.find(params[:status_id])
       count = @reblog.reblogs_count
       authorize @reblog, :show?
     end
@@ -43,7 +45,7 @@ class Api::V1::Statuses::ReblogsController < Api::V1::Statuses::BaseController
   private
 
   def set_reblog
-    @reblog = Status.find(params[:status_id])
+    @reblog = status_scope.find(params[:status_id])
     authorize @reblog, :show?
   rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     not_found
@@ -51,5 +53,9 @@ class Api::V1::Statuses::ReblogsController < Api::V1::Statuses::BaseController
 
   def reblog_params
     params.permit(:visibility)
+  end
+
+  def status_scope
+    single_network_mode? ? Status.local_network : Status.all
   end
 end

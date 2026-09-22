@@ -8,7 +8,8 @@ class Api::V1::Statuses::BaseController < Api::BaseController
   private
 
   def set_status
-    @status = Status.find(params[:status_id])
+    scope = single_network_mode? ? Status.local_network : Status.all
+    @status = scope.find(params[:status_id])
     authorize @status, :show?
   rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     not_found

@@ -15,12 +15,12 @@ class Api::V1::Lists::AccountsController < Api::BaseController
   end
 
   def create
-    AddAccountsToListService.new.call(@list, Account.find(account_ids))
+    AddAccountsToListService.new.call(@list, account_scope.find(account_ids))
     render_empty
   end
 
   def destroy
-    RemoveAccountsFromListService.new.call(@list, Account.where(id: account_ids))
+    RemoveAccountsFromListService.new.call(@list, account_scope.where(id: account_ids))
     render_empty
   end
 
@@ -31,11 +31,18 @@ class Api::V1::Lists::AccountsController < Api::BaseController
   end
 
   def load_accounts
+    scope = @list.accounts.without_suspended.includes(:account_stat, :user)
+    scope = scope.local if single_network_mode?
+
     if unlimited?
-      @list.accounts.without_suspended.includes(:account_stat, :user).all
+      scope.all
     else
-      @list.accounts.without_suspended.includes(:account_stat, :user).paginate_by_max_id(limit_param(DEFAULT_ACCOUNTS_LIMIT), params[:max_id], params[:since_id])
+      scope.paginate_by_max_id(limit_param(DEFAULT_ACCOUNTS_LIMIT), params[:max_id], params[:since_id])
     end
+  end
+
+  def account_scope
+    single_network_mode? ? Account.local : Account.all
   end
 
   def account_ids

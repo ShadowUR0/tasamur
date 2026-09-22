@@ -130,6 +130,14 @@ class Status < ApplicationRecord
   scope :recent, -> { reorder(id: :desc) }
   scope :remote, -> { where(local: false).where.not(uri: nil) }
   scope :local,  -> { where(local: true).or(where(uri: nil)) }
+  scope :local_network, lambda {
+    local_accounts = Account.local.select(:id)
+    local_statuses = local.joins(:account).merge(Account.local).reorder(nil).select(:id)
+    scope = local.joins(:account).merge(Account.local)
+    scope = scope.where(reblog_of_id: nil).or(scope.where(reblog_of_id: local_statuses))
+    scope = scope.where(in_reply_to_account_id: nil).or(scope.where(in_reply_to_account_id: local_accounts))
+    scope.where.not(id: Quote.joins(:quoted_account).merge(Account.remote).select(:status_id))
+  }
   scope :with_accounts, ->(ids) { where(id: ids).includes(:account) }
   scope :without_replies, -> { not_reply.or(reply_to_account) }
   scope :not_reply, -> { where(reply: false) }

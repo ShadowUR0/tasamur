@@ -32,11 +32,11 @@ class Api::V1::ConversationsController < Api::BaseController
   private
 
   def set_conversation
-    @conversation = AccountConversation.where(account: current_account).find(params[:id])
+    @conversation = conversation_scope.find(params[:id])
   end
 
   def paginated_conversations
-    AccountConversation.where(account: current_account)
+    conversation_scope
       .includes(
         account: [:account_stat, user: :role],
         last_status: [
@@ -51,6 +51,15 @@ class Api::V1::ConversationsController < Api::BaseController
         ]
       )
       .to_a_paginated_by_id(limit_param(LIMIT), params_slice(:max_id, :since_id, :min_id))
+  end
+
+  def conversation_scope
+    scope = AccountConversation.where(account: current_account)
+    return scope unless single_network_mode?
+
+    scope
+      .where(last_status_id: Status.local_network.select(:id))
+      .where('NOT (account_conversations.participant_account_ids && ARRAY(SELECT id FROM accounts WHERE domain IS NOT NULL))')
   end
 
   def next_path

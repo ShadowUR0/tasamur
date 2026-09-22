@@ -19,7 +19,7 @@ class Api::V1::Peers::SearchController < Api::BaseController
   private
 
   def require_enabled_api!
-    head 404 unless Setting.peers_api_enabled && !limited_federation_mode?
+    head 404 unless Setting.peers_api_enabled && !limited_federation_mode? && !single_network_mode?
   end
 
   def set_domains

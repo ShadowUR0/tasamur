@@ -2,6 +2,7 @@
 
 module JsonLdHelper
   include ContextHelper
+  include DomainControlHelper
 
   UNSUPPORTED_JSONLD_KEYWORDS = %w(@graph @included @reverse).freeze
 
@@ -270,6 +271,8 @@ module JsonLdHelper
   #     (see {#response_error_unsalvageable} )
   #   - +:none+ - do not raise, return +nil+
   def fetch_resource_without_id_validation(uri, on_behalf_of = nil, raise_on_error: :none, request_options: {})
+    return if domain_not_allowed?(uri)
+
     on_behalf_of ||= Account.representative
 
     build_request(uri, on_behalf_of, options: request_options).perform do |response|

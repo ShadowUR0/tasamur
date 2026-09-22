@@ -186,7 +186,7 @@ class AccountSearchService < BaseService
       # This will not return any immediate results but has the
       # potential to fill the local database with relevant
       # accounts for the next time the search is performed.
-      Fasp::AccountSearchWorker.perform_async(@query) if options[:query_fasp]
+      Fasp::AccountSearchWorker.perform_async(@query) if options[:query_fasp] && !options[:local]
 
       search_service_results.compact.uniq.tap do |results|
         span.set_attribute('search.results.count', results.size)
@@ -207,7 +207,9 @@ class AccountSearchService < BaseService
 
     return @exact_match if defined?(@exact_match)
 
-    match = if options[:resolve]
+    match = if options[:local]
+              Account.find_local(query_username) if domain_is_local?
+            elsif options[:resolve]
               ResolveAccountService.new.call(query)
             elsif domain_is_local?
               Account.find_local(query_username)
@@ -239,14 +241,16 @@ class AccountSearchService < BaseService
   end
 
   def advanced_search_results
-    Account.advanced_search_for(terms_for_query, account, limit: limit_for_non_exact_results, following: options[:following], offset: offset)
+    Account.advanced_search_for(terms_for_query, account, limit: limit_for_non_exact_results, following: options[:following], offset: offset, local: options[:local])
   end
 
   def simple_search_results
-    Account.search_for(terms_for_query, limit: limit_for_non_exact_results, offset: offset)
+    Account.search_for(terms_for_query, limit: limit_for_non_exact_results, offset: offset, local: options[:local])
   end
 
   def from_elasticsearch
+    return if options[:local]
+
     query_builder = begin
       if options[:use_searchable_text]
         FullQueryBuilder.new(terms_for_query, account, options.slice(:following))

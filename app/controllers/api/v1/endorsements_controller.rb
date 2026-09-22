@@ -25,7 +25,8 @@ class Api::V1::EndorsementsController < Api::BaseController
   end
 
   def endorsed_accounts
-    current_account.endorsed_accounts.includes(:account_stat, :user).without_suspended
+    scope = current_account.endorsed_accounts.includes(:account_stat, :user).without_suspended
+    single_network_mode? ? scope.local : scope
   end
 
   def next_path

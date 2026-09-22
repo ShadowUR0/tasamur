@@ -28,7 +28,7 @@ class Api::V1::NotificationsController < Api::BaseController
   end
 
   def show
-    @notification = current_account.notifications.without_suspended.find(params[:id])
+    @notification = notification_scope.find(params[:id])
     render json: @notification, serializer: REST::NotificationSerializer, supported_notification_types: params[:supported_types]
   end
 
@@ -56,12 +56,17 @@ class Api::V1::NotificationsController < Api::BaseController
   end
 
   def browserable_account_notifications
-    current_account.notifications.without_suspended.browserable(
+    notification_scope.browserable(
       types: Array(browserable_params[:types]),
       exclude_types: Array(browserable_params[:exclude_types]),
       from_account_id: browserable_params[:account_id],
       include_filtered: truthy_param?(:include_filtered)
     )
+  end
+
+  def notification_scope
+    scope = current_account.notifications.without_suspended
+    single_network_mode? ? scope.merge(Account.local) : scope
   end
 
   def notification_marker

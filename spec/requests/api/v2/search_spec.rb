@@ -29,6 +29,22 @@ RSpec.describe 'Search API' do
           expect(response.parsed_body[:accounts].pluck(:id)).to contain_exactly(bob.id.to_s, ana.id.to_s, tom.id.to_s)
         end
 
+        context 'when Tasamur single-network mode is enabled' do
+          let!(:remote_account) { Fabricate(:account, username: 'remote_test', domain: 'remote.example') }
+
+          before do
+            allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+          end
+
+          it 'returns local accounts without exposing remote accounts' do
+            get '/api/v2/search', headers: headers, params: params
+
+            account_ids = response.parsed_body[:accounts].pluck(:id)
+            expect(account_ids).to contain_exactly(bob.id.to_s, ana.id.to_s, tom.id.to_s)
+            expect(account_ids).to_not include(remote_account.id.to_s)
+          end
+        end
+
         context 'with truthy `resolve`' do
           let(:params) { { q: 'test1', resolve: '1' } }
 

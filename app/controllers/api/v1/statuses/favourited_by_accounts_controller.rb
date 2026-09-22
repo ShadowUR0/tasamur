@@ -19,11 +19,13 @@ class Api::V1::Statuses::FavouritedByAccountsController < Api::V1::Statuses::Bas
   end
 
   def default_accounts
-    Account
+    scope = Account
       .without_suspended
       .includes(:favourites, :account_stat, :user)
       .references(:favourites)
       .where(favourites: { status_id: @status.id })
+
+    single_network_mode? ? scope.local : scope
   end
 
   def paginated_favourites

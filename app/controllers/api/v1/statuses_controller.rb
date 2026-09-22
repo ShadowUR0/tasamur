@@ -93,25 +93,25 @@ class Api::V1::StatusesController < Api::BaseController
   private
 
   def set_statuses
-    @statuses = Status.permitted_statuses_from_ids(status_ids, current_account)
+    @statuses = status_scope.merge(Status.permitted_statuses_from_ids(status_ids, current_account))
   end
 
   def set_status
-    @status = Status.find(params[:id])
+    @status = status_scope.find(params[:id])
     authorize @status, :show?
   rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     not_found
   end
 
   def set_thread
-    @thread = Status.find(status_params[:in_reply_to_id]) if status_params[:in_reply_to_id].present?
+    @thread = status_scope.find(status_params[:in_reply_to_id]) if status_params[:in_reply_to_id].present?
     authorize(@thread, :show?) if @thread.present?
   rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     render json: { error: I18n.t('statuses.errors.in_reply_not_found') }, status: 404
   end
 
   def set_quoted_status
-    @quoted_status = Status.find(status_params[:quoted_status_id])&.proper if status_params[:quoted_status_id].present?
+    @quoted_status = status_scope.find(status_params[:quoted_status_id])&.proper if status_params[:quoted_status_id].present?
     authorize(@quoted_status, :quote?) if @quoted_status.present?
   rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     # TODO: distinguish between non-existing and non-quotable posts
@@ -120,6 +120,10 @@ class Api::V1::StatusesController < Api::BaseController
 
   def check_statuses_limit
     raise(Mastodon::ValidationError) if status_ids.size > DEFAULT_STATUSES_LIMIT
+  end
+
+  def status_scope
+    single_network_mode? ? Status.local_network : Status.all
   end
 
   def status_ids

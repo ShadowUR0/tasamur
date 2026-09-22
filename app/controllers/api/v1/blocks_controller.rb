@@ -20,6 +20,7 @@ class Api::V1::BlocksController < Api::BaseController
     @paginated_blocks ||= Block.eager_load(target_account: [:account_stat, :user])
       .joins(:target_account)
       .merge(Account.without_suspended)
+      .then { |scope| single_network_mode? ? scope.merge(Account.local) : scope }
       .where(account: current_account)
       .paginate_by_max_id(
         limit_param(DEFAULT_ACCOUNTS_LIMIT),

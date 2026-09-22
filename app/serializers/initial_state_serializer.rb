@@ -129,9 +129,9 @@ class InitialStateSerializer < ActiveModel::Serializer
       version: instance_presenter.version,
       terms_of_service_enabled: TermsOfService.current.present?,
       local_live_feed_access: Setting.local_live_feed_access,
-      remote_live_feed_access: Setting.remote_live_feed_access,
+      remote_live_feed_access: single_network_mode? ? 'disabled' : Setting.remote_live_feed_access,
       local_topic_feed_access: Setting.local_topic_feed_access,
-      remote_topic_feed_access: Setting.remote_topic_feed_access,
+      remote_topic_feed_access: single_network_mode? ? 'disabled' : Setting.remote_topic_feed_access,
     }
   end
 
@@ -149,5 +149,9 @@ class InitialStateSerializer < ActiveModel::Serializer
 
   def sso_redirect
     "/auth/auth/#{Devise.omniauth_providers[0]}" if ENV['ONE_CLICK_SSO_LOGIN'] == 'true' && ENV['OMNIAUTH_ONLY'] == 'true' && Devise.omniauth_providers.length == 1
+  end
+
+  def single_network_mode?
+    Rails.configuration.x.mastodon.single_network_mode
   end
 end

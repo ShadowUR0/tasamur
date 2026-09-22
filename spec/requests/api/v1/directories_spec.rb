@@ -115,6 +115,25 @@ RSpec.describe 'Directories API' do
       end
     end
 
+    context 'when Tasamur single-network mode is enabled' do
+      let(:local_account) { Fabricate(:account, user: Fabricate(:user, confirmed_at: 10.days.ago, approved: true), discoverable: true) }
+      let(:remote_account) { Fabricate(:account, domain: 'remote.example', discoverable: true) }
+
+      before do
+        allow(Rails.configuration.x.mastodon).to receive(:single_network_mode).and_return(true)
+        local_account.create_account_stat!
+        remote_account.create_account_stat!
+      end
+
+      it 'returns only local accounts without requiring a local parameter' do
+        get '/api/v1/directory', headers: headers
+
+        expect(response).to have_http_status(200)
+        expect(response.parsed_body.pluck(:id)).to include(local_account.id.to_s)
+        expect(response.parsed_body.pluck(:id)).to_not include(remote_account.id.to_s)
+      end
+    end
+
     context 'when ordered by active' do
       it 'returns accounts in order of most recent status activity' do
         old_stat = Fabricate(:account_stat, last_status_at: 1.day.ago)
