@@ -34,17 +34,12 @@ const messages = defineMessages({
     defaultMessage: 'Recently active',
   },
   newArrivals: { id: 'directory.new_arrivals', defaultMessage: 'New arrivals' },
-  local: { id: 'directory.local', defaultMessage: 'From {domain} only' },
-  federated: {
-    id: 'directory.federated',
-    defaultMessage: 'From known fediverse',
-  },
 });
 
 export const Directory: React.FC<{
   columnId?: string;
   multiColumn?: boolean;
-  params?: { order: string; local?: boolean };
+  params?: { order: string };
 }> = ({ columnId, multiColumn, params }) => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
@@ -52,26 +47,17 @@ export const Directory: React.FC<{
   const column = useRef<ColumnRef>(null);
 
   const [orderParam, setOrderParam] = useSearchParam('order');
-  const [localParam, setLocalParam] = useSearchParam('local');
-
-  let localParamBool: boolean | undefined;
-
-  if (localParam === 'false') {
-    localParamBool = false;
-  }
 
   const order = orderParam ?? params?.order ?? 'active';
-  const local = localParamBool ?? params?.local ?? true;
 
   const handlePin = useCallback(() => {
     if (columnId) {
       dispatch(removeColumn(columnId));
     } else {
-      dispatch(addColumn('DIRECTORY', { order, local }));
+      dispatch(addColumn('DIRECTORY', { order, local: true }));
     }
-  }, [dispatch, columnId, order, local]);
+  }, [dispatch, columnId, order]);
 
-  const domain = useAppSelector((s) => s.meta.get('domain') as string);
   const accountIds = useAppSelector(
     (state) =>
       state.user_lists.getIn(
@@ -88,8 +74,8 @@ export const Directory: React.FC<{
   );
 
   useEffect(() => {
-    void dispatch(fetchDirectory({ order, local }));
-  }, [dispatch, order, local]);
+    void dispatch(fetchDirectory({ order, local: true }));
+  }, [dispatch, order]);
 
   const handleMove = useCallback(
     (dir: number) => {
@@ -113,24 +99,9 @@ export const Directory: React.FC<{
     [dispatch, columnId, setOrderParam],
   );
 
-  const handleChangeLocal = useCallback<ChangeEventHandler<HTMLInputElement>>(
-    (e) => {
-      if (columnId) {
-        dispatch(
-          changeColumnParams(columnId, ['local'], e.target.value === '1'),
-        );
-      } else if (e.target.value === '1') {
-        setLocalParam('true');
-      } else {
-        setLocalParam('false');
-      }
-    },
-    [dispatch, columnId, setLocalParam],
-  );
-
   const handleLoadMore = useCallback(() => {
-    void dispatch(expandDirectory({ order, local }));
-  }, [dispatch, order, local]);
+    void dispatch(expandDirectory({ order, local: true }));
+  }, [dispatch, order]);
 
   const pinned = !!columnId;
   const initialLoad = isLoading && accountIds.size === 0;
@@ -152,23 +123,6 @@ export const Directory: React.FC<{
             label={intl.formatMessage(messages.newArrivals)}
             checked={order === 'new'}
             onChange={handleChangeOrder}
-          />
-        </div>
-
-        <div className='filter-form__column' role='group'>
-          <RadioButton
-            name='local'
-            value='1'
-            label={intl.formatMessage(messages.local, { domain })}
-            checked={local}
-            onChange={handleChangeLocal}
-          />
-          <RadioButton
-            name='local'
-            value='0'
-            label={intl.formatMessage(messages.federated)}
-            checked={!local}
-            onChange={handleChangeLocal}
           />
         </div>
       </div>

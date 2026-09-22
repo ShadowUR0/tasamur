@@ -309,8 +309,8 @@ export const AccountEdit: FC = () => {
               title={intl.formatMessage(messages.customFieldsTipTitle)}
             >
               <FormattedMessage
-                id='account_edit.custom_fields.tip_content'
-                defaultMessage='You can easily add credibility to your Mastodon account by verifying links to any websites you own.'
+                id='tasamur.account_edit.custom_fields.tip_content'
+                defaultMessage='You can add credibility to your Tasamur account by verifying links to websites you own.'
               />
             </DismissibleCallout>
           )}

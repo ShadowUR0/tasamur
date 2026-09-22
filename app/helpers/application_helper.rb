@@ -35,8 +35,8 @@ module ApplicationHelper
   end
 
   def available_sign_up_url
-    if closed_registrations? || omniauth_only?
-      'https://joinmastodon.org/'
+    if omniauth_only?
+      ENV.fetch('SSO_ACCOUNT_SIGN_UP', new_user_session_url)
     else
       ENV.fetch('SSO_ACCOUNT_SIGN_UP', new_user_registration_url)
     end

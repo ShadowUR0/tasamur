@@ -27,37 +27,42 @@ RSpec.describe AuthorizeInteractionsController do
         expect(response).to have_http_status(404)
       end
 
-      it 'renders error when account cant be found' do
-        service = instance_double(ResolveAccountService)
-        allow(ResolveAccountService).to receive(:new).and_return(service)
-        allow(service).to receive(:call).with('missing@hostname').and_return(nil)
+      it 'does not resolve an account on another domain' do
+        allow(ResolveAccountService).to receive(:new)
 
         get :show, params: { acct: 'acct:missing@hostname' }
 
         expect(response).to have_http_status(404)
-        expect(service).to have_received(:call).with('missing@hostname')
+        expect(ResolveAccountService).to_not have_received(:new)
       end
 
-      it 'sets resource from url' do
+      it 'does not resolve an external URL' do
+        allow(ResolveURLService).to receive(:new)
+
+        get :show, params: { acct: 'https://example.com/@alice' }
+
+        expect(response).to have_http_status(404)
+        expect(ResolveURLService).to_not have_received(:new)
+      end
+
+      it 'sets a resource from a local URL' do
         account = Fabricate(:account)
+        local_url = account_url(account, host: Rails.configuration.x.web_domain)
         service = instance_double(ResolveURLService)
         allow(ResolveURLService).to receive(:new).and_return(service)
-        allow(service).to receive(:call).with('http://example.com').and_return(account)
+        allow(service).to receive(:call).with(local_url).and_return(account)
 
-        get :show, params: { acct: 'http://example.com' }
+        get :show, params: { acct: local_url }
 
         expect(response)
           .to have_http_status(302)
           .and redirect_to(web_url("@#{account.pretty_acct}"))
       end
 
-      it 'sets resource from acct uri' do
+      it 'sets a resource from a local account handle' do
         account = Fabricate(:account)
-        service = instance_double(ResolveAccountService)
-        allow(ResolveAccountService).to receive(:new).and_return(service)
-        allow(service).to receive(:call).with('found@hostname').and_return(account)
 
-        get :show, params: { acct: 'acct:found@hostname' }
+        get :show, params: { acct: "acct:#{account.username}@#{Rails.configuration.x.local_domain}" }
 
         expect(response)
           .to have_http_status(302)

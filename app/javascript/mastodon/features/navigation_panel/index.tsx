@@ -39,12 +39,7 @@ import { ColumnLink } from 'mastodon/features/ui/components/column_link';
 import { getNavigationSkipLinkId } from 'mastodon/features/ui/components/skip_links';
 import { useBreakpoint } from 'mastodon/features/ui/hooks/useBreakpoint';
 import { useIdentity } from 'mastodon/identity_context';
-import {
-  localLiveFeedAccess,
-  remoteLiveFeedAccess,
-  trendsEnabled,
-  me,
-} from 'mastodon/initial_state';
+import { localLiveFeedAccess, trendsEnabled, me } from 'mastodon/initial_state';
 import { transientSingleColumn } from 'mastodon/is_mobile';
 import { canViewFeed } from 'mastodon/permissions';
 import { selectUnreadNotificationGroupsCount } from 'mastodon/selectors/notifications';
@@ -66,7 +61,6 @@ const messages = defineMessages({
     defaultMessage: 'Notifications',
   },
   explore: { id: 'explore.title', defaultMessage: 'Trending' },
-  firehose: { id: 'column.firehose', defaultMessage: 'Live feeds' },
   firehose_singular: {
     id: 'column.firehose_singular',
     defaultMessage: 'Live feed',
@@ -297,25 +291,15 @@ export const NavigationPanel: React.FC<{ multiColumn?: boolean }> = ({
           </li>
         )}
 
-        {(canViewFeed(signedIn, permissions, localLiveFeedAccess) ||
-          canViewFeed(signedIn, permissions, remoteLiveFeedAccess)) && (
+        {canViewFeed(signedIn, permissions, localLiveFeedAccess) && (
           <li>
             <ColumnLink
               transparent
-              to={
-                canViewFeed(signedIn, permissions, localLiveFeedAccess)
-                  ? '/public/local'
-                  : '/public/remote'
-              }
+              to='/public/local'
               icon='globe'
               iconComponent={PublicIcon}
               isActive={isFirehoseActive}
-              text={intl.formatMessage(
-                canViewFeed(signedIn, permissions, localLiveFeedAccess) &&
-                  canViewFeed(signedIn, permissions, remoteLiveFeedAccess)
-                  ? messages.firehose
-                  : messages.firehose_singular,
-              )}
+              text={intl.formatMessage(messages.firehose_singular)}
             />
           </li>
         )}

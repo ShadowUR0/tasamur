@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import {
-  domain,
   version,
   source_url,
   statusPageUrl,
@@ -21,15 +20,14 @@ export const LinkFooter: React.FC<{
   return (
     <footer className={classes.wrapper} data-context={context}>
       <section>
-        <h2 className={classes.heading}>{`${domain}:`}</h2>
+        <h2 className={classes.heading}>Tasamur:</h2>
         <ul className={classes.list}>
           <li>
             <Link to='/about' target={multiColumn ? '_blank' : undefined}>
               <FormattedMessage
-                id='footer.about_this_server'
-                defaultMessage='About'
+                id='tasamur.footer.about'
+                defaultMessage='About Tasamur'
               />
-              <span className='sr-only'> {domain}</span>
             </Link>
           </li>
           {statusPageUrl && (
@@ -78,7 +76,12 @@ export const LinkFooter: React.FC<{
         </ul>
       </section>
       <section>
-        <h2 className={classes.heading}>Tasamur:</h2>
+        <h2 className={classes.heading}>
+          <FormattedMessage
+            id='tasamur.footer.software'
+            defaultMessage='Software:'
+          />
+        </h2>
         <ul className={classes.list}>
           <li>
             <a href='https://joinmastodon.org' target='_blank' rel='noopener'>

@@ -61,8 +61,8 @@ export const EmptyMessage: React.FC<EmptyMessageProps> = ({
         }
         message={
           <FormattedMessage
-            id='empty_column.account_featured_self.showcase_accounts_desc'
-            defaultMessage='Collections are curated lists of accounts to help others discover more of the Fediverse.'
+            id='tasamur.collections.description'
+            defaultMessage='Collections are curated lists of accounts that help people discover profiles on Tasamur.'
           />
         }
       >

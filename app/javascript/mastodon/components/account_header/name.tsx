@@ -124,13 +124,13 @@ const InvalidAccountHelp: FC = () => {
             className={classNames('dropdown-animation', classes.handleHelp)}
           >
             <FormattedMessage
-              id='account.name.help.invalid_header'
+              id='tasamur.account.name.help.invalid_header'
               defaultMessage="This user's handle is being updated"
               tagName='h3'
             />
             <FormattedMessage
-              id='account.name.help.invalid_explanation'
-              defaultMessage='This can happen when a user changes username, and is generally temporary. If this persists, it may be because of an unavailable server or some misconfiguration on their end.'
+              id='tasamur.account.name.help.invalid_explanation'
+              defaultMessage='This can happen when a user changes their username and is generally temporary.'
               tagName='p'
             />
           </div>
@@ -189,8 +189,8 @@ const AccountNameHelp: FC<{
             className={classNames('dropdown-animation', classes.handleHelp)}
           >
             <FormattedMessage
-              id='account.name.help.header'
-              defaultMessage='A handle is like an email address'
+              id='tasamur.account.name.help.header'
+              defaultMessage='Your Tasamur handle'
               tagName='h3'
             />
             <ol>
@@ -198,15 +198,15 @@ const AccountNameHelp: FC<{
                 <Icon id='at' icon={AtIcon} />
                 {isSelf ? (
                   <FormattedMessage
-                    id='account.name.help.username_self'
-                    defaultMessage='{username} is your username on this server. Someone on another server might have the same username.'
+                    id='tasamur.account.name.help.username_self'
+                    defaultMessage='{username} is your Tasamur username.'
                     values={{ username: <strong>{username}</strong> }}
                     tagName='p'
                   />
                 ) : (
                   <FormattedMessage
-                    id='account.name.help.username'
-                    defaultMessage='{username} is this account’s username on their server. Someone on another server might have the same username.'
+                    id='tasamur.account.name.help.username'
+                    defaultMessage='{username} is this account’s Tasamur username.'
                     values={{ username: <strong>{username}</strong> }}
                     tagName='p'
                   />
@@ -216,15 +216,15 @@ const AccountNameHelp: FC<{
                 <Icon id='domain' icon={DomainIcon} />
                 {isSelf ? (
                   <FormattedMessage
-                    id='account.name.help.domain_self'
-                    defaultMessage='{domain} is your server that hosts your profile and posts.'
+                    id='tasamur.account.name.help.domain_self'
+                    defaultMessage='{domain} identifies Tasamur in compatible apps and profile links.'
                     values={{ domain: <strong>{domain}</strong> }}
                     tagName='p'
                   />
                 ) : (
                   <FormattedMessage
-                    id='account.name.help.domain'
-                    defaultMessage='{domain} is the server that hosts the user’s profile and posts.'
+                    id='tasamur.account.name.help.domain'
+                    defaultMessage='{domain} identifies Tasamur in compatible apps and profile links.'
                     values={{ domain: <strong>{domain}</strong> }}
                     tagName='p'
                   />
@@ -232,8 +232,8 @@ const AccountNameHelp: FC<{
               </li>
             </ol>
             <FormattedMessage
-              id='account.name.help.footer'
-              defaultMessage='Just like you can send emails to people using different email providers, you can interact with people on other Mastodon servers, and with anyone on other Fediverse apps.'
+              id='tasamur.account.name.help.footer'
+              defaultMessage='Use the full handle when a compatible app asks for a Tasamur account.'
               tagName='p'
             />
 

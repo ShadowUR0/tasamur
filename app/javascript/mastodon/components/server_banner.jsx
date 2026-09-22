@@ -12,13 +12,11 @@ import { Account } from 'mastodon/components/account';
 import { ServerHeroImage } from 'mastodon/components/server_hero_image';
 import { ShortNumber } from 'mastodon/components/short_number';
 import { Skeleton } from 'mastodon/components/skeleton';
-import { domain } from 'mastodon/initial_state';
-
 import { injectIntl } from './intl';
 
 const messages = defineMessages({
-  aboutActiveUsers: { id: 'server_banner.about_active_users', defaultMessage: 'People using this server during the last 30 days (Monthly Active Users)' },
-  aboutThisServer: { id: 'server_banner.more_about_this_server', defaultMessage: 'More about this server'},
+  aboutActiveUsers: { id: 'tasamur.server_banner.about_active_users', defaultMessage: 'People using Tasamur during the last 30 days (Monthly Active Users)' },
+  aboutTasamur: { id: 'tasamur.server_banner.more_about', defaultMessage: 'More about Tasamur'},
 });
 
 const mapStateToProps = state => ({
@@ -45,14 +43,14 @@ class ServerBanner extends PureComponent {
     return (
       <div className='server-banner'>
         <div className='server-banner__introduction'>
-          <FormattedMessage id='server_banner.is_one_of_many' defaultMessage='{domain} is one of the many independent Mastodon servers you can use to participate in the fediverse.' values={{ domain: <strong>{domain}</strong>, mastodon: <a href='https://joinmastodon.org' target='_blank' rel='noopener'>Mastodon</a> }} />
+          <FormattedMessage id='tasamur.server_banner.introduction' defaultMessage='Tasamur is a place to share updates and connect with people.' />
         </div>
 
         <NavLink to='/about'>
           <ServerHeroImage
             blurhash={server.item?.thumbnail.blurhash}
             src={server.item?.thumbnail.url}
-            alt={intl.formatMessage(messages.aboutThisServer)}
+            alt={intl.formatMessage(messages.aboutTasamur)}
             className='server-banner__hero'
           />
         </NavLink>
@@ -77,7 +75,7 @@ class ServerBanner extends PureComponent {
           </div>
 
           <div className='server-banner__meta__column'>
-            <h4><FormattedMessage id='server_banner.server_stats' defaultMessage='Server stats:' /></h4>
+            <h4><FormattedMessage id='tasamur.server_banner.stats' defaultMessage='Tasamur stats:' /></h4>
 
             {isLoading ? (
               <>

@@ -13,11 +13,7 @@ import { IconButton } from '@/mastodon/components/icon_button';
 import { ModalShell, ModalShellBody } from '@/mastodon/components/modal_shell';
 import { useAccount } from '@/mastodon/hooks/useAccount';
 import { useCurrentAccountId } from '@/mastodon/hooks/useAccountId';
-import {
-  createAppSelector,
-  useAppDispatch,
-  useAppSelector,
-} from '@/mastodon/store';
+import { useAppDispatch } from '@/mastodon/store';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 
 import classes from './styles.module.scss';
@@ -26,27 +22,6 @@ const closeMessage = defineMessage({
   id: 'lightbox.close',
   defaultMessage: 'Close',
 });
-
-const selectServerName = createAppSelector(
-  [
-    (state) => state.accounts,
-    (_, accountId: string) => accountId,
-    (state) => state.server.server.item?.domain,
-  ],
-  (accounts, accountId, serverDomain) => {
-    const acct = accounts.getIn([accountId, 'acct']) as string | undefined;
-    if (!acct) {
-      return undefined;
-    }
-
-    const domain = acct.split('@').at(1);
-    if (domain) {
-      return domain;
-    }
-
-    return serverDomain;
-  },
-);
 
 export const AccountJoinModal: FC<{
   accountId: string;
@@ -73,8 +48,6 @@ export const AccountJoinModal: FC<{
     return null;
   }, [createdAtStr]);
 
-  const domain = useAppSelector((state) => selectServerName(state, accountId));
-
   const dispatch = useAppDispatch();
   const handle = account?.acct;
   const handleShare = useCallback(() => {
@@ -82,7 +55,7 @@ export const AccountJoinModal: FC<{
       return;
     }
 
-    let shareText = '#Fediversary';
+    let shareText = '#TasamurAnniversary';
     if (anniversary === 0) {
       shareText = isMe ? '#firstday' : '#welcome';
     }
@@ -105,7 +78,6 @@ export const AccountJoinModal: FC<{
           <AccountJoinMessage
             name={<DisplayNameSimple account={account} />}
             isMe={isMe}
-            serverName={domain}
             anniversary={anniversary}
           />
           <h1>
@@ -139,30 +111,25 @@ export const AccountJoinModal: FC<{
 const AccountJoinMessage: FC<{
   name: React.JSX.Element;
   isMe: boolean;
-  serverName?: string;
   anniversary: number | null;
-}> = ({ name, isMe, serverName, anniversary }) => {
+}> = ({ name, isMe, anniversary }) => {
   if (anniversary === 0) {
     if (isMe) {
       return (
         <FormattedMessage
-          id='account.join_modal.me_today'
-          defaultMessage='It’s your first day on {server}!'
+          id='tasamur.account.join_modal.me_today'
+          defaultMessage='It’s your first day on Tasamur!'
           tagName='p'
-          values={{
-            server: serverName,
-          }}
         />
       );
     }
     return (
       <FormattedMessage
-        id='account.join_modal.other_today'
-        defaultMessage='It’s {name}’s first day on {server}!'
+        id='tasamur.account.join_modal.other_today'
+        defaultMessage='It’s {name}’s first day on Tasamur!'
         tagName='p'
         values={{
           name,
-          server: serverName,
         }}
       />
     );
@@ -172,35 +139,28 @@ const AccountJoinMessage: FC<{
     if (anniversary !== null && anniversary > 0) {
       return (
         <FormattedMessage
-          id='account.join_modal.me_anniversary'
-          defaultMessage='Happy Fediversary! You joined {server} on'
+          id='tasamur.account.join_modal.me_anniversary'
+          defaultMessage='Happy Tasamur anniversary! You joined on'
           tagName='p'
-          values={{
-            server: serverName,
-          }}
         />
       );
     }
     return (
       <FormattedMessage
-        id='account.join_modal.me'
-        defaultMessage='You joined {server} on'
+        id='tasamur.account.join_modal.me'
+        defaultMessage='You joined Tasamur on'
         tagName='p'
-        values={{
-          server: serverName,
-        }}
       />
     );
   }
 
   return (
     <FormattedMessage
-      id='account.join_modal.other'
-      defaultMessage='{name} joined {server} on'
+      id='tasamur.account.join_modal.other'
+      defaultMessage='{name} joined Tasamur on'
       tagName='p'
       values={{
         name,
-        server: serverName,
       }}
     />
   );

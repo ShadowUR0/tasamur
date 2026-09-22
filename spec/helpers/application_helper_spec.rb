@@ -100,8 +100,8 @@ RSpec.describe ApplicationHelper do
         allow(Setting).to receive(:[]).with('registrations_mode').and_return 'none'
       end
 
-      it 'redirects to joinmastodon site' do
-        expect(helper.available_sign_up_url).to match(/joinmastodon.org/)
+      it 'keeps account creation on Tasamur' do
+        expect(helper.available_sign_up_url).to eq(new_user_registration_url)
       end
     end
 
@@ -112,8 +112,8 @@ RSpec.describe ApplicationHelper do
         end
       end
 
-      it 'redirects to joinmastodon site' do
-        expect(helper.available_sign_up_url).to match(/joinmastodon.org/)
+      it 'keeps account access on Tasamur' do
+        expect(helper.available_sign_up_url).to eq(new_user_session_url)
       end
     end
 

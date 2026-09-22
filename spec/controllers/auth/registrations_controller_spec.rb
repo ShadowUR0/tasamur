@@ -158,10 +158,13 @@ RSpec.describe Auth::RegistrationsController do
     end
 
     context 'with open registrations' do
-      it 'returns http success' do
+      it 'presents Tasamur account creation' do
         Setting.registrations_mode = 'open'
         get :new
+
         expect(response).to have_http_status(200)
+        expect(response.body).to include('Create your Tasamur account')
+        expect(response.body).to_not include('fediverse')
       end
     end
 

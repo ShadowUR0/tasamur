@@ -10,7 +10,7 @@ module InstanceHelper
   end
 
   def description_for_sign_up(invite = nil)
-    safe_join([description_prefix(invite), I18n.t('auth.description.suffix')], ' ')
+    safe_join([description_prefix(invite), I18n.t('tasamur.auth.description.suffix')], ' ')
   end
 
   def instance_presenter
@@ -33,9 +33,9 @@ module InstanceHelper
 
   def description_prefix(invite)
     if invite.present?
-      I18n.t('auth.description.prefix_invited_by_user', name: invite.user.account.username)
+      I18n.t('tasamur.auth.description.prefix_invited_by_user', name: invite.user.account.username)
     else
-      I18n.t('auth.description.prefix_sign_up')
+      I18n.t('tasamur.auth.description.prefix_sign_up')
     end
   end
 end

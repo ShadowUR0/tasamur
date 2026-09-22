@@ -316,10 +316,21 @@ export const Search: React.FC<{
       const newQuickActions = [];
 
       if (trimmedValue.length > 0) {
-        const couldBeURL =
-          trimmedValue.startsWith('https://') && !trimmedValue.includes(' ');
+        let couldBeLocalURL = false;
 
-        if (couldBeURL) {
+        if (
+          trimmedValue.startsWith('https://') &&
+          !trimmedValue.includes(' ')
+        ) {
+          try {
+            couldBeLocalURL =
+              new URL(trimmedValue).host === window.location.host;
+          } catch {
+            couldBeLocalURL = false;
+          }
+        }
+
+        if (couldBeLocalURL) {
           newQuickActions.push({
             key: 'open-url',
             label: (
@@ -373,9 +384,16 @@ export const Search: React.FC<{
           });
         }
 
-        const couldBeUsername = /^@?[a-z0-9_-]+(@[^\s]+)?$/i.exec(trimmedValue);
+        const usernameMatch = /^@?([a-z0-9_-]+)(?:@([^\s]+))?$/i.exec(
+          trimmedValue,
+        );
 
-        if (couldBeUsername) {
+        if (
+          usernameMatch?.[1] &&
+          (!usernameMatch[2] || usernameMatch[2].toLowerCase() === domain)
+        ) {
+          const username = usernameMatch[1];
+
           newQuickActions.push({
             key: 'go-to-account',
             label: (
@@ -386,7 +404,7 @@ export const Search: React.FC<{
               />
             ),
             action: () => {
-              const query = trimmedValue.replace(/^@/, '');
+              const query = username;
               history.push(`/@${query}`);
               void dispatch(clickSearchResult({ q: query, type: 'account' }));
               unfocus();

@@ -19,10 +19,6 @@ export const ProfileDisplayModal: FC<DialogModalProps> = ({ onClose }) => {
   const intl = useIntl();
 
   const { profile, isPending } = useAppSelector((state) => state.profileEdit);
-  const serverName = useAppSelector(
-    (state) => state.meta.get('domain') as string,
-  );
-
   const dispatch = useAppDispatch();
   const handleToggleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -133,11 +129,8 @@ export const ProfileDisplayModal: FC<DialogModalProps> = ({ onClose }) => {
         icon={false}
       >
         <FormattedMessage
-          id='account_edit.profile_tab.hint.description'
-          defaultMessage='These settings customize what users see on {server} in the official apps, but they may not apply to users on other servers and 3rd party apps.'
-          values={{
-            server: serverName,
-          }}
+          id='tasamur.account_edit.profile_tab.hint.description'
+          defaultMessage='These settings control how your profile appears on Tasamur. Some compatible third-party apps may display profiles differently.'
         />
       </Callout>
     </DialogModal>

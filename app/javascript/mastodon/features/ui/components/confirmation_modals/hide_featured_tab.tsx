@@ -6,7 +6,6 @@ import { useHistory } from 'react-router';
 
 import { useAccount } from '@/mastodon/hooks/useAccount';
 import { useCurrentAccountId } from '@/mastodon/hooks/useAccountId';
-import { domain } from '@/mastodon/initial_state';
 import { patchProfile } from '@/mastodon/reducers/slices/profile_edit';
 import { useAppDispatch } from 'mastodon/store';
 
@@ -24,9 +23,9 @@ const messages = defineMessages({
       'You can change this at any time under <i>Edit profile > Profile tab settings</i>.',
   },
   message: {
-    id: 'confirmations.hide_featured_tab.message',
+    id: 'tasamur.confirmations.hide_featured_tab.message',
     defaultMessage:
-      'This will hide the tab for users on {serverName} and other servers running the latest version of Mastodon. Other displays may vary.',
+      'This will hide the tab on Tasamur. Some compatible third-party apps may display profiles differently.',
   },
   confirm: {
     id: 'confirmations.hide_featured_tab.confirm',
@@ -58,11 +57,7 @@ export const ConfirmHideFeaturedTabModal: React.FC<
               i: (words) => <i>{words}</i>,
             })}
           </p>
-          <p>
-            {intl.formatMessage(messages.message, {
-              serverName: domain,
-            })}
-          </p>
+          <p>{intl.formatMessage(messages.message)}</p>
         </div>
       }
       confirm={intl.formatMessage(messages.confirm)}

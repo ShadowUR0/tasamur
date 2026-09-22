@@ -11,7 +11,6 @@ import classes from './shared_page.module.scss';
 
 export const WrapstodonSharedPage: FC = () => {
   const account = useAppSelector(accountSelector);
-  const domain = useAppSelector((state) => state.meta.get('domain') as string);
   return (
     <main className={classes.wrapper}>
       <AnnualReport />
@@ -46,19 +45,17 @@ export const WrapstodonSharedPage: FC = () => {
 
         <div className={classes.footerSection}>
           <FormattedMessage
-            id='annual_report.shared_page.footer_server_info'
-            defaultMessage='{username} uses {domain}, one of many communities powered by Mastodon.'
+            id='tasamur.annual_report.shared_page.footer_info'
+            defaultMessage='{username} uses Tasamur.'
             values={{
               username: <DisplayName variant='simple' account={account} />,
-              domain: <strong>{domain}</strong>,
             }}
             tagName='p'
           />
           <a href='/about'>
             <FormattedMessage
-              id='footer.about_server'
-              defaultMessage='About {domain}'
-              values={{ domain }}
+              id='tasamur.footer.about'
+              defaultMessage='About Tasamur'
             />
           </a>
         </div>

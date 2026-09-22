@@ -156,8 +156,8 @@ const renderGroupTitle = (groupKey: GroupKey, titleId: string) => {
     );
     description = (
       <FormattedMessage
-        id='collections.suggestions.can_not_add_desc'
-        defaultMessage='These accounts may have opted out of discovery, or they might be on a server that doesn’t support collections.'
+        id='tasamur.collections.suggestions.can_not_add_desc'
+        defaultMessage='These accounts may have opted out of discovery or may not allow being added to collections.'
       />
     );
   }

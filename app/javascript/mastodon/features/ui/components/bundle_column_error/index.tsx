@@ -51,8 +51,8 @@ export const BundleColumnError: React.FC<BundleColumnErrorProps> = ({
       );
       body = (
         <FormattedMessage
-          id='bundle_column_error.network.body'
-          defaultMessage='There was an error when trying to load this page. This could be due to a temporary problem with your internet connection or this server.'
+          id='tasamur.bundle_column_error.network.body'
+          defaultMessage='There was an error while loading this page. This could be a temporary problem with your internet connection or Tasamur.'
         />
       );
       break;

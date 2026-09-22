@@ -29,15 +29,15 @@ export const SignInBanner: React.FC = () => {
         <p>
           <strong>
             <FormattedMessage
-              id='sign_in_banner.mastodon_is'
-              defaultMessage="Mastodon is the best way to keep up with what's happening."
+              id='tasamur.sign_in_banner.introduction'
+              defaultMessage='Tasamur is a place to keep up with what’s happening.'
             />
           </strong>
         </p>
         <p>
           <FormattedMessage
-            id='sign_in_banner.follow_anyone'
-            defaultMessage='Follow anyone across the fediverse and see it all in chronological order. No algorithms, ads, or clickbait in sight.'
+            id='tasamur.sign_in_banner.description'
+            defaultMessage='Follow people, share updates, and see posts in chronological order.'
           />
         </p>
         <a
@@ -83,15 +83,15 @@ export const SignInBanner: React.FC = () => {
       <p>
         <strong>
           <FormattedMessage
-            id='sign_in_banner.mastodon_is'
-            defaultMessage="Mastodon is the best way to keep up with what's happening."
+            id='tasamur.sign_in_banner.introduction'
+            defaultMessage='Tasamur is a place to keep up with what’s happening.'
           />
         </strong>
       </p>
       <p>
         <FormattedMessage
-          id='sign_in_banner.follow_anyone'
-          defaultMessage='Follow anyone across the fediverse and see it all in chronological order. No algorithms, ads, or clickbait in sight.'
+          id='tasamur.sign_in_banner.description'
+          defaultMessage='Follow people, share updates, and see posts in chronological order.'
         />
       </p>
       {signupButton}

@@ -30,14 +30,19 @@ class AuthorizeInteractionsController < ApplicationController
 
   def located_resource
     if uri_param_is_url?
-      ResolveURLService.new.call(uri_param)
+      ResolveURLService.new.call(uri_param) if local_uri?
     else
-      account_from_remote_follow
+      local_account
     end
   end
 
-  def account_from_remote_follow
-    ResolveAccountService.new.call(uri_param)
+  def local_account
+    username, domain = uri_param.strip.gsub(/\A@/, '').split('@', 2)
+    Account.find_local(username) if domain.nil? || TagManager.instance.local_domain?(domain)
+  end
+
+  def local_uri?
+    TagManager.instance.local_url?(uri_param)
   end
 
   def uri_param_is_url?

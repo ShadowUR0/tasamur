@@ -55,7 +55,7 @@ module HomeHelper
 
   def sign_up_message
     if closed_registrations?
-      t('auth.registration_closed', instance: site_hostname)
+      t('tasamur.auth.registration_closed')
     elsif open_registrations?
       t('auth.register')
     elsif approved_registrations?

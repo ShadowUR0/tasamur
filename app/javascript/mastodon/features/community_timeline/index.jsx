@@ -11,7 +11,7 @@ import PeopleIcon from '@/material-icons/400-24px/group.svg?react';
 import { injectIntl } from '@/mastodon/components/intl';
 import { DismissableBanner } from 'mastodon/components/dismissable_banner';
 import { identityContextPropShape, withIdentity } from 'mastodon/identity_context';
-import { domain, localLiveFeedAccess } from 'mastodon/initial_state';
+import { localLiveFeedAccess } from 'mastodon/initial_state';
 import { canViewFeed } from 'mastodon/permissions';
 
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
@@ -24,7 +24,7 @@ import StatusListContainer from '../ui/containers/status_list_container';
 import ColumnSettingsContainer from './containers/column_settings_container';
 
 const messages = defineMessages({
-  title: { id: 'column.community', defaultMessage: 'Local timeline' },
+  title: { id: 'tasamur.column.live_feed', defaultMessage: 'Live feed' },
 });
 
 const mapStateToProps = (state, { columnId }) => {
@@ -127,13 +127,13 @@ class CommunityTimeline extends PureComponent {
 
     const emptyMessage = canViewFeed(signedIn, permissions, localLiveFeedAccess) ? (
       <FormattedMessage
-        id='empty_column.community'
-        defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!'
+        id='tasamur.empty_column.live_feed'
+        defaultMessage='The live feed is empty. Write something publicly to get the conversation started!'
       />
     ) : (
       <FormattedMessage
-        id='empty_column.disabled_feed'
-        defaultMessage='This feed has been disabled by your server administrators.'
+        id='tasamur.empty_column.disabled_feed'
+        defaultMessage='This feed is not currently available.'
       />
     );
 
@@ -154,7 +154,7 @@ class CommunityTimeline extends PureComponent {
         </ColumnHeader>
 
         <StatusListContainer
-          prepend={<DismissableBanner id='community_timeline'><FormattedMessage id='dismissable_banner.community_timeline' defaultMessage='These are the most recent public posts from people whose accounts are hosted by {domain}.' values={{ domain }} /></DismissableBanner>}
+          prepend={<DismissableBanner id='community_timeline'><FormattedMessage id='tasamur.dismissable_banner.live_feed' defaultMessage='These are the most recent public posts shared on Tasamur.' /></DismissableBanner>}
           trackScroll={!pinned}
           scrollKey={`community_timeline-${columnId}`}
           timelineId={`community${onlyMedia ? ':media' : ''}`}

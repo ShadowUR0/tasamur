@@ -13,7 +13,7 @@ const messages = defineMessages({
   legal: { id: 'report.categories.legal', defaultMessage: 'Legal' },
   other: { id: 'report.categories.other', defaultMessage: 'Other' },
   spam: { id: 'report.categories.spam', defaultMessage: 'Spam' },
-  violation: { id: 'report.categories.violation', defaultMessage: 'Content violates one or more server rules' },
+  violation: { id: 'tasamur.report.categories.violation', defaultMessage: 'Content violates one or more Tasamur rules' },
 });
 
 class Category extends PureComponent {

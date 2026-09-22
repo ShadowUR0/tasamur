@@ -21,8 +21,8 @@ export const LatestActivity = () => {
       prepend={
         <Callout className={classes.banner}>
           <FormattedMessage
-            id='custom_homepage.these_are_the_latest_posts'
-            defaultMessage='These are the latest 40 posts from accounts on this server.'
+            id='tasamur.custom_homepage.latest_posts'
+            defaultMessage='These are the latest 40 public posts on Tasamur.'
           />
         </Callout>
       }

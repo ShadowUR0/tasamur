@@ -48,8 +48,8 @@ export const About = () => {
       <div className={classes.block}>
         <h2>
           <FormattedMessage
-            id='custom_homepage.about_this_server'
-            defaultMessage='About this server'
+            id='tasamur.custom_homepage.about'
+            defaultMessage='About Tasamur'
           />
         </h2>
         {isLoading ? (
@@ -63,8 +63,8 @@ export const About = () => {
           <div className='prose'>
             <p>
               <FormattedMessage
-                id='about.not_available'
-                defaultMessage='This information has not been made available on this server.'
+                id='tasamur.about.not_available'
+                defaultMessage='This information is not currently available.'
               />
             </p>
           </div>

@@ -17,7 +17,7 @@ en:
     sign_up:
       preamble: Create your Tasamur account to follow people, share updates, and join conversations.
   errors:
-    noscript_html: 'To use the Tasamur web application, please enable JavaScript. Alternatively, try a <a href="%{apps_path}">compatible native app</a>.'
+    noscript: To use the Tasamur web application, please enable JavaScript.
   notification_mailer:
     reblog:
       body: 'Your post was reposted by %{name}:'
@@ -54,6 +54,27 @@ en:
     min_reblogs_hint: Doesn't delete any of your posts that has been reposted at least this number of times. Leave blank to delete posts regardless of their number of reposts
   themes:
     default: Tasamur
+  tasamur:
+    auth:
+      confirmations:
+        awaiting_review: Your email address is confirmed! The Tasamur team is now reviewing your registration. You will receive an email if your account is approved.
+        registration_complete: Your Tasamur registration is now complete!
+      description:
+        prefix_invited_by_user: '@%{name} invites you to join Tasamur!'
+        prefix_sign_up: Sign up for Tasamur today!
+        suffix: Follow people, share updates, and join conversations.
+      registration_closed: Tasamur is not accepting new accounts right now
+      rules:
+        invited_by: 'You can join Tasamur thanks to an invitation from:'
+        preamble: These rules are set and enforced by the Tasamur moderation team.
+        preamble_invited: Before you continue, please review the Tasamur rules.
+      sign_in:
+        preamble: Sign in with your Tasamur account.
+        title: Sign in to Tasamur
+      sign_up:
+        manual_review: Tasamur registrations are reviewed by our moderation team. To help us process your registration, tell us a little about yourself and why you would like an account.
+        preamble: Create your Tasamur account to follow people, share updates, and join conversations.
+        title: Create your Tasamur account
   two_factor_authentication:
     role_requirement: '%{domain} requires you to set up Two-Factor Authentication before you can use Tasamur.'
   unsubscriptions:

@@ -9,12 +9,12 @@
 
   - if @invite.present? && @invite.autofollow?
     %h1.title= t('auth.rules.title_invited')
-    %p.lead.invited-by= t('auth.rules.invited_by', domain: site_hostname)
+    %p.lead.invited-by= t('tasamur.auth.rules.invited_by')
     = render 'application/card', account: @invite.user.account, compact: true
-    %p.lead= t('auth.rules.preamble_invited', domain: site_hostname)
+    %p.lead= t('tasamur.auth.rules.preamble_invited')
   - else
     %h1.title= t('auth.rules.title')
-    %p.lead= t('auth.rules.preamble', domain: site_hostname)
+    %p.lead= t('tasamur.auth.rules.preamble')
 
   %ol.rules-list{ role: 'list' }
     = render collection: @rule_translations, partial: 'auth/rule_translations/rule_translation'

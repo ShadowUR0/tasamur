@@ -330,6 +330,11 @@ RSpec.describe UserMailer do
         .to match(I18n.t('user_mailer.welcome.explanation'))
     end
 
+    it 'keeps onboarding links on Tasamur' do
+      expect(mail.text_part.body.to_s).to_not include('apps.apple.com', 'play.google.com')
+      expect(mail.html_part.body.to_s).to_not include('apps.apple.com', 'play.google.com')
+    end
+
     it_behaves_like 'delivery to memorialized user'
   end
 

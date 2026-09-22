@@ -11,9 +11,12 @@ RSpec.describe Auth::SessionsController do
   end
 
   describe 'GET #new' do
-    it 'returns http success' do
+    it 'presents Tasamur as the account service' do
       get :new
+
       expect(response).to have_http_status(200)
+      expect(response.body).to include('Sign in to Tasamur')
+      expect(response.body).to_not include('different server')
     end
   end
 

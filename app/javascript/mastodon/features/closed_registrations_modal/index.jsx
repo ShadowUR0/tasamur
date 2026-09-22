@@ -4,7 +4,6 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
 import { fetchServer } from 'mastodon/actions/server';
-import { domain } from 'mastodon/initial_state';
 import { NavigationFocusTarget } from '@/mastodon/components/navigation_focus_target';
 
 const mapStateToProps = state => ({
@@ -32,9 +31,8 @@ class ClosedRegistrationsModal extends ImmutablePureComponent {
       closedRegistrationsMessage = (
         <p className='prose'>
           <FormattedMessage
-            id='closed_registrations_modal.description'
-            defaultMessage='Creating an account on {domain} is currently not possible, but please keep in mind that you do not need an account specifically on {domain} to use Mastodon.'
-            values={{ domain: <strong>{domain}</strong> }}
+            id='tasamur.closed_registrations_modal.description'
+            defaultMessage='Creating a Tasamur account is currently not possible. Please check back later.'
           />
         </p>
       );
@@ -44,7 +42,7 @@ class ClosedRegistrationsModal extends ImmutablePureComponent {
       <div className='modal-root__modal interaction-modal'>
         <div className='interaction-modal__lead'>
           <NavigationFocusTarget as='h1'>
-            <FormattedMessage id='closed_registrations_modal.title' defaultMessage='Signing up on Mastodon' />
+            <FormattedMessage id='tasamur.closed_registrations_modal.title' defaultMessage='Joining Tasamur' />
           </NavigationFocusTarget>
         </div>
 

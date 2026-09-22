@@ -29,7 +29,27 @@ logo component/Rails helper; legacy `app/javascript/images/mailer/wordmark.png`
 and `lib/assets/wordmark.{dark,light}.png` need review before regenerating them.
 Diagnostic overlays/difference images are not production artwork.
 
-Deferred: broader localization, remote sign-in/interaction flows, server-qualified
-handles, migration, and federation architecture. Public pages, moderation, REST,
-and ActivityPub remain intact. Native app links remain compatibility references;
-the PWA does not advertise Mastodon apps as Tasamur apps.
+## Single-network Web mode
+
+Phase 2 enables `TASAMUR_SINGLE_NETWORK_MODE` by default. Ordinary Web and API
+discovery is limited to local Tasamur accounts and posts: registration, sign-in,
+interaction prompts, directories, live feeds, search, account lookup, timelines,
+and relationship views no longer offer remote-server selection or expose known
+remote records. The setting defaults off in the test environment so upstream
+behavior can still be exercised explicitly; setting the environment variable to
+`false` is an upgrade/debugging escape hatch, not a second user-facing mode.
+
+The boundary is enforced server-side as well as in the Web UI. External account
+resolution and ActivityPub fetches are rejected, signed inbound requests from
+external domains fail domain policy, and outbound ActivityPub delivery to
+external inboxes is skipped. Existing remote database records are retained for
+moderation/history and are not migrated or deleted.
+
+Compatibility surfaces remain deliberately active: local public profile and post
+pages, WebFinger, unsigned ActivityPub representations, REST APIs, OAuth, and
+Mastodon-compatible identifiers and response shapes. Remote feed capability
+fields remain present but report `disabled`. Mastodon attribution, source links,
+and AGPL licensing remain intact.
+
+Deferred: broader localization, migration of historical remote data, native
+Tasamur apps, and any future change to the external compatibility boundary.

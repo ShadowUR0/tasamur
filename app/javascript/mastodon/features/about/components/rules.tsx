@@ -78,8 +78,8 @@ export const RulesSection: FC<RulesSectionProps> = ({ isLoading = false }) => {
       <Section title={intl.formatMessage(messages.rules)}>
         <p>
           <FormattedMessage
-            id='about.not_available'
-            defaultMessage='This information has not been made available on this server.'
+            id='tasamur.about.not_available'
+            defaultMessage='This information is not currently available.'
           />
         </p>
       </Section>

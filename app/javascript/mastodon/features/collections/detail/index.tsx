@@ -131,8 +131,8 @@ export const PendingNote: React.FC = () => {
       }
     >
       <FormattedMessage
-        id='collections.pending_accounts.message'
-        defaultMessage='Accounts may appear as pending when we’re awaiting a response from the user or their server. Only you can see pending accounts.'
+        id='tasamur.collections.pending_accounts.message'
+        defaultMessage='Accounts may appear as pending while we are waiting for the person to approve being featured. Only you can see pending accounts.'
       />
     </Callout>
   );
